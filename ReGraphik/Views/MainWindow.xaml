@@ -4,60 +4,190 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="ReGraphik"
     Height="720"
-    Width="1200">
+    Width="1200"
+    WindowStartupLocation="CenterScreen"
+    Background="#F3F4F6">
 
     <Grid>
 
-        <TabControl>
+        <!-- COLUNAS -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <Border Background="#2563EB">
+
+            <StackPanel>
+
+                <!-- LOGO -->
+                <TextBlock
+                    Text="ReGraphik"
+                    Foreground="White"
+                    FontSize="28"
+                    FontWeight="Bold"
+                    Margin="20"/>
+
+                <!-- BOTÕES -->
+                <Button
+                    Content="Dashboard"
+                    Height="45"
+                    Margin="10,5"
+                    Background="#3B82F6"
+                    Foreground="White"
+                    BorderBrush="{x:Null}"
+                    FontSize="16"
+                    Click="Dashboard_Click"/>
+
+                <Button
+                    Content="Cadastrar Resíduos"
+                    Height="45"
+                    Margin="10,5"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderBrush="{x:Null}"
+                    FontSize="16"
+                    Click="Residuos_Click"/>
+
+                <Button
+                    Content="Pontos de Coleta"
+                    Height="45"
+                    Margin="10,5"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderBrush="{x:Null}"
+                    FontSize="16"
+                    Click="Pontos_Click"/>
+
+                <Button
+                    Content="Mapa"
+                    Height="45"
+                    Margin="10,5"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderBrush="{x:Null}"
+                    FontSize="16"
+                    Click="Mapa_Click"/>
+
+                <Button
+                    Content="Relatórios"
+                    Height="45"
+                    Margin="10,5"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderBrush="{x:Null}"
+                    FontSize="16"
+                    Click="Relatorios_Click"/>
+
+            </StackPanel>
+
+        </Border>
+
+        <!-- CONTEÚDO -->
+        <Grid Grid.Column="1"
+              Margin="20">
 
             <!-- DASHBOARD -->
-            <TabItem Header="Dashboard">
+            <Grid x:Name="DashboardGrid">
 
-                <Grid>
+                <Border
+                    Background="White"
+                    CornerRadius="12">
 
                     <TextBlock
                         Text="Dashboard"
-                        FontSize="30"
-                        FontWeight="Bold"/>
+                        FontSize="32"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
 
-                </Grid>
+                </Border>
 
-            </TabItem>
+            </Grid>
 
             <!-- RESÍDUOS -->
-            <TabItem Header="Resíduos">
+            <Grid
+                x:Name="ResiduosGrid"
+                Visibility="Collapsed">
 
-                <StackPanel Margin="20">
+                <Border
+                    Background="White"
+                    CornerRadius="12">
 
-                    <TextBox
-                        Height="35"
-                        Text="{Binding NomeResiduo}" />
+                    <TextBlock
+                        Text="Cadastrar Resíduos"
+                        FontSize="32"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
 
-                    <Button
-                        Height="35"
-                        Margin="0,10,0,0"
-                        Content="Salvar"
-                        Command="{Binding SalvarResiduoCommand}" />
+                </Border>
 
-                    <ListBox
-                        Margin="0,10,0,0"
-                        ItemsSource="{Binding Residuos}" />
-
-                </StackPanel>
-
-            </TabItem>
+            </Grid>
 
             <!-- PONTOS -->
-            <TabItem Header="Pontos de Coleta">
+            <Grid
+                x:Name="PontosGrid"
+                Visibility="Collapsed">
 
-            </TabItem>
+                <Border
+                    Background="White"
+                    CornerRadius="12">
+
+                    <TextBlock
+                        Text="Pontos de Coleta"
+                        FontSize="32"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+                </Border>
+
+            </Grid>
 
             <!-- MAPA -->
-            <TabItem Header="Mapa">
+            <Grid
+                x:Name="MapaGrid"
+                Visibility="Collapsed">
 
-            </TabItem>
+                <Border
+                    Background="White"
+                    CornerRadius="12">
 
-        </TabControl>
+                    <TextBlock
+                        Text="Mapa"
+                        FontSize="32"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+                </Border>
+
+            </Grid>
+
+            <!-- RELATÓRIOS -->
+            <Grid
+                x:Name="RelatoriosGrid"
+                Visibility="Collapsed">
+
+                <Border
+                    Background="White"
+                    CornerRadius="12">
+
+                    <TextBlock
+                        Text="Relatórios"
+                        FontSize="32"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+                </Border>
+
+            </Grid>
+
+        </Grid>
 
     </Grid>
+
 </Window>
