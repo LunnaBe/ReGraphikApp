@@ -7,8 +7,8 @@ namespace ApiRestReGraphik.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("id_tipo_residuo")]
-        public int IdTipoResiduo{ get; set; }
+        [JsonPropertyName("tipo_residuo_aceito")]
+        public required string TipoResiduoAceito { get; set; }
 
         [JsonPropertyName("descricao_sugestao")]
         public required string DescricaoSugestao { get; set; }
