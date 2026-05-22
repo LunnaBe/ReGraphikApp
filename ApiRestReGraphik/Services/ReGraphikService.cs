@@ -1,4 +1,5 @@
-﻿using ApiRestReGraphik.Repositories.Interface;
+﻿using ApiRestReGraphik.Models;
+using ApiRestReGraphik.Repositories.Interface;
 using Firebase.Database;
 
 namespace ApiRestReGraphik.Services
@@ -25,7 +26,7 @@ namespace ApiRestReGraphik.Services
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao listar os dados</exception>
-        public async Task<List<string>> Listar()
+        public async Task<List<Residuo>> Listar()
         {
             try
             {
@@ -44,7 +45,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="id">ID do resíduo a ser obtido</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao obter o resíduo por ID</exception>
-        public async Task<string> ObterPorId(int id)
+        public async Task<Residuo> ObterPorId(int id)
         {
             try
             {
@@ -64,7 +65,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="residuo">O resíduo a ser adicionado</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao adicionar o resíduo</exception>
-        public async Task Adicionar(string residuo)
+        public async Task Adicionar(Residuo residuo)
         {
             try
             {
@@ -83,11 +84,11 @@ namespace ApiRestReGraphik.Services
         /// <param name="residuo">O resíduo a ser atualizado</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao atualizar o resíduo</exception>
-        public async Task Atualizar(string residuo)
+        public async Task Atualizar(int id, Residuo residuo)
         {
             try
             {
-                await _repository.Update(residuo);
+                await _repository.Update(id, residuo);
             }
             catch (Exception ex)
             {

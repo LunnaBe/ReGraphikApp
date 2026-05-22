@@ -1,4 +1,6 @@
-﻿namespace ApiRestReGraphik.Repositories.Interface
+﻿using ApiRestReGraphik.Models;
+
+namespace ApiRestReGraphik.Repositories.Interface
 {
     /// <summary>
     /// Define os métodos para acessar e manipular os dados relacionados ao ReGraphik, 
@@ -6,10 +8,10 @@
     /// </summary>
     public interface IReGraphikRepository
     {
-        Task<List<string>> GetAll();
-        Task<string> GetById(int id);
-        Task Add(string residuo);
-        Task Update(string residuo);
+        Task<List<Residuo>> GetAll();
+        Task<Residuo> GetById(int id);
+        Task Add(Residuo residuo);
+        Task Update(int id, Residuo residuo);
         Task Delete(int id);
     }
 }
