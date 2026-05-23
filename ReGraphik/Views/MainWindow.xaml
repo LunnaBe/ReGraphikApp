@@ -5,12 +5,48 @@
     Title="ReGraphik"
     Height="720"
     Width="1200"
+    MinHeight="600"
+    MinWidth="960"
     WindowStartupLocation="CenterScreen"
     Background="#F3F4F6">
 
-    <Grid>
+    <Window.Resources>
+        <Style x:Key="NavBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#BFDBFE"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Margin" Value="8,3"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1D4ED8"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- COLUNAS -->
+        <Style x:Key="NavBtnAtivo" TargetType="Button" BasedOn="{StaticResource NavBtn}">
+            <Setter Property="Background" Value="#1D4ED8"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
@@ -18,176 +54,72 @@
 
         <!-- SIDEBAR -->
         <Border Background="#2563EB">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <StackPanel>
-
-                <!-- LOGO -->
-                <TextBlock
+                <TextBlock Grid.Row="0"
                     Text="ReGraphik"
                     Foreground="White"
-                    FontSize="28"
+                    FontSize="26"
                     FontWeight="Bold"
-                    Margin="20"/>
+                    Margin="20,24,20,20"/>
 
-                <!-- BOTÕES -->
-                <Button
-                    Content="Dashboard"
-                    Height="45"
-                    Margin="10,5"
-                    Background="#3B82F6"
-                    Foreground="White"
-                    BorderBrush="{x:Null}"
-                    FontSize="16"
-                    Click="Dashboard_Click"/>
+                <StackPanel Grid.Row="1">
+                    <Button x:Name="BtnDashboard"
+                            Style="{StaticResource NavBtnAtivo}"
+                            Click="Dashboard_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⊞ " FontSize="15"/>
+                            <TextBlock Text="Dashboard"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button
-                    Content="Cadastrar Resíduos"
-                    Height="45"
-                    Margin="10,5"
-                    Background="Transparent"
-                    Foreground="White"
-                    BorderBrush="{x:Null}"
-                    FontSize="16"
-                    Click="Residuos_Click"/>
+                    <Button x:Name="BtnResiduos"
+                            Style="{StaticResource NavBtn}"
+                            Click="Residuos_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="♻ " FontSize="15"/>
+                            <TextBlock Text="Cadastrar Resíduos"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button
-                    Content="Pontos de Coleta"
-                    Height="45"
-                    Margin="10,5"
-                    Background="Transparent"
-                    Foreground="White"
-                    BorderBrush="{x:Null}"
-                    FontSize="16"
-                    Click="Pontos_Click"/>
+                    <Button x:Name="BtnPontos"
+                            Style="{StaticResource NavBtn}"
+                            Click="Pontos_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📍 " FontSize="15"/>
+                            <TextBlock Text="Pontos de Coleta"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button
-                    Content="Mapa"
-                    Height="45"
-                    Margin="10,5"
-                    Background="Transparent"
-                    Foreground="White"
-                    BorderBrush="{x:Null}"
-                    FontSize="16"
-                    Click="Mapa_Click"/>
+                    <Button x:Name="BtnMapa"
+                            Style="{StaticResource NavBtn}"
+                            Click="Mapa_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🗺 " FontSize="15"/>
+                            <TextBlock Text="Mapa"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button
-                    Content="Relatórios"
-                    Height="45"
-                    Margin="10,5"
-                    Background="Transparent"
-                    Foreground="White"
-                    BorderBrush="{x:Null}"
-                    FontSize="16"
-                    Click="Relatorios_Click"/>
-
-            </StackPanel>
-
+                    <Button x:Name="BtnRelatorios"
+                            Style="{StaticResource NavBtn}"
+                            Click="Relatorios_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊 " FontSize="15"/>
+                            <TextBlock Text="Relatórios"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Border>
 
         <!-- CONTEÚDO -->
-        <Grid Grid.Column="1"
-              Margin="20">
-
-            <!-- DASHBOARD -->
-            <Grid x:Name="DashboardGrid">
-
-                <Border
-                    Background="White"
-                    CornerRadius="12">
-
-                    <TextBlock
-                        Text="Dashboard"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-
-                </Border>
-
-            </Grid>
-
-            <!-- RESÍDUOS -->
-            <Grid
-                x:Name="ResiduosGrid"
-                Visibility="Collapsed">
-
-                <Border
-                    Background="White"
-                    CornerRadius="12">
-
-                    <TextBlock
-                        Text="Cadastrar Resíduos"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-
-                </Border>
-
-            </Grid>
-
-            <!-- PONTOS -->
-            <Grid
-                x:Name="PontosGrid"
-                Visibility="Collapsed">
-
-                <Border
-                    Background="White"
-                    CornerRadius="12">
-
-                    <TextBlock
-                        Text="Pontos de Coleta"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-
-                </Border>
-
-            </Grid>
-
-            <!-- MAPA -->
-            <Grid
-                x:Name="MapaGrid"
-                Visibility="Collapsed">
-
-                <Border
-                    Background="White"
-                    CornerRadius="12">
-
-                    <TextBlock
-                        Text="Mapa"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-
-                </Border>
-
-            </Grid>
-
-            <!-- RELATÓRIOS -->
-            <Grid
-                x:Name="RelatoriosGrid"
-                Visibility="Collapsed">
-
-                <Border
-                    Background="White"
-                    CornerRadius="12">
-
-                    <TextBlock
-                        Text="Relatórios"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-
-                </Border>
-
-            </Grid>
-
-        </Grid>
-
+        <Frame x:Name="MainFrame"
+               Grid.Column="1"
+               Margin="20"
+               NavigationUIVisibility="Hidden"/>
     </Grid>
-
 </Window>
