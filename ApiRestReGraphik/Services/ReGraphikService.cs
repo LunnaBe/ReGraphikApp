@@ -65,7 +65,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="residuo">O resíduo a ser adicionado</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao adicionar o resíduo</exception>
-        public async Task Adicionar(Residuo residuo)
+        public async Task Criar(Residuo residuo)
         {
             try
             {
