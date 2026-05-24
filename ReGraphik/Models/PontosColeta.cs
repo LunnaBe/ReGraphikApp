@@ -5,7 +5,8 @@ namespace ApiRestReGraphik.Models
     public class PontosColeta
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public required string Id { get; set; }
+
         [JsonPropertyName("nome_ponto")]
         public required string NomePonto { get; set; }
 

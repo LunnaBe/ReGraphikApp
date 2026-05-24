@@ -5,7 +5,7 @@ namespace ApiRestReGraphik.Models
     public class Usuario
     {
         [JsonPropertyName("id")]
-        public int ID { get; set; }
+        public required string Id { get; set; }
 
         [JsonPropertyName("name")]
         public required string Nome { get; set; }

@@ -5,10 +5,10 @@ namespace ApiRestReGraphik.Models
     public class Residuo
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public required string Id { get; set; }
 
         [JsonPropertyName("id_usuario")]
-        public int IdUsuario { get; set; }
+        public required string IdUsuario { get; set; }
 
         [JsonPropertyName("tipo_residuo")]
         public required string TipoResiduo { get; set; }
