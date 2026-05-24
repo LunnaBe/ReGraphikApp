@@ -4,18 +4,18 @@ using Firebase.Database;
 
 namespace ApiRestReGraphik.Services
 {
-    public class ReGraphikService
+    public class ResiduoService
     {
         // Logger para registrar informações e erros relacionados ao serviço ReGraphik
-        private readonly ILogger<ReGraphikService> _logger;
-        private readonly IReGraphikRepository _repository;
+        private readonly ILogger<ResiduoService> _logger;
+        private readonly IResiduo _repository;
 
         /// <summary>
-        ///  Construtor da classe ReGraphikService que recebe as dependências necessárias, para permitir o registro de informações e erros durante a execução dos métodos do serviço.
+        ///  Construtor da classe ResiduoService que recebe as dependências necessárias, para permitir o registro de informações e erros durante a execução dos métodos do serviço.
         /// </summary>
         /// <param name="logger">Logger para registrar informações e erros</param>
         /// <param name="repository">Repositório para acessar os dados do ReGraphik</param>
-        public ReGraphikService(ILogger<ReGraphikService> logger, IReGraphikRepository repository)
+        public ResiduoService(ILogger<ResiduoService> logger, IResiduo repository)
         {
             _logger = logger;
             _repository = repository;
@@ -45,7 +45,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="id">ID do resíduo a ser obtido</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao obter o resíduo por ID</exception>
-        public async Task<Residuo> ObterPorId(int id)
+        public async Task<Residuo> ObterPorId(string id)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="residuo">O resíduo a ser adicionado</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao adicionar o resíduo</exception>
-        public async Task Adicionar(Residuo residuo)
+        public async Task Criar(Residuo residuo)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="residuo">O resíduo a ser atualizado</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao atualizar o resíduo</exception>
-        public async Task Atualizar(int id, Residuo residuo)
+        public async Task Atualizar(string id, Residuo residuo)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace ApiRestReGraphik.Services
         /// <param name="id">ID do resíduo a ser excluído</param>
         /// <returns></returns>
         /// <exception cref="Exception">Lançada quando ocorre um erro ao excluir o resíduo</exception>
-        public async Task Excluir(int id)
+        public async Task Excluir(string id)
         {
             try
             {
