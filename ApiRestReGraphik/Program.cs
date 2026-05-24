@@ -5,16 +5,31 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Configura o Swagger para incluir comentários XML, permitindo que as descrições dos endpoints sejam exibidas na documentação gerada.
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    options.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // Deixe o Swagger rodar tanto local quanto publicado
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        // Isso faz com que o Swagger seja a página inicial do seu site publicado
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API ReGraphik v1");
+        c.RoutePrefix = string.Empty;
+    });
 }
+
 
 app.UseHttpsRedirection();
 
