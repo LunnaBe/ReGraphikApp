@@ -57,7 +57,7 @@ namespace ApiRestReGraphik.Controllers
         }
 
         /// <summary>
-        /// GET api/Residuo/{id} - Endpoint para obter um resíduo específico do Residuo com base no ID fornecido.
+        /// GET api/ReGraphik/{id} - Endpoint para obter um resíduo específico do ReGraphik com base no ID fornecido.
         /// </summary>
         /// 
         /// <remarks>Responsável por obter um resíduo específico do ReGraphik com base no ID fornecido. 

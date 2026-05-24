@@ -11,7 +11,7 @@ namespace ApiRestReGraphik.Services
         private readonly IResiduo _repository;
 
         /// <summary>
-        ///  Construtor da classe ReGraphikService que recebe as dependências necessárias, para permitir o registro de informações e erros durante a execução dos métodos do serviço.
+        ///  Construtor da classe ResiduoService que recebe as dependências necessárias, para permitir o registro de informações e erros durante a execução dos métodos do serviço.
         /// </summary>
         /// <param name="logger">Logger para registrar informações e erros</param>
         /// <param name="repository">Repositório para acessar os dados do ReGraphik</param>
