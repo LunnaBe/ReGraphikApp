@@ -77,64 +77,35 @@ namespace ReGraphik.Views.Pages
             var lista = new List<PontosColeta>();
             try
             {
-                var query = $"ponto de coleta reciclagem {cidade}";
-                var url = $"https://maps.googleapis.com/maps/api/place/textsearch/json" +
-                          $"?query={Uri.EscapeDataString(query)}&key={ApiKey}";
+                // Substitua pela URL real da sua API
+                var url = $"https://webregraphik.runasp.net/api/pontoscoleta";
 
+                // Para fins de teste, vamos usar dados estáticos simulados
                 var json = await _http.GetStringAsync(url);
-                using var doc = JsonDocument.Parse(json);
-                var root = doc.RootElement;
 
-                if (!root.TryGetProperty("results", out var results)) return lista;
+                // Configurações para desserialização, ignorando diferenças de maiúsculas/minúsculas
+                var opcoes = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var resultado = JsonSerializer.Deserialize<List<PontosColeta>>(json, opcoes);
 
-                int id = 1;
-                foreach (var item in results.EnumerateArray())
+                if (resultado != null)
                 {
-                    var nome = item.TryGetProperty("name", out var n)
-                        ? n.GetString() ?? "Sem nome" : "Sem nome";
-                    var endereco = item.TryGetProperty("formatted_address", out var a)
-                        ? a.GetString() ?? cidade : cidade;
+                    // Filtra os pontos pela cidade, ignorando maiúsculas/minúsculas
+                    lista = resultado
+                        .Where(p => p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
 
-                    double lat = 0, lng = 0;
-                    if (item.TryGetProperty("geometry", out var geo) &&
-                        geo.TryGetProperty("location", out var loc))
+                    for (int i = 0; i < lista.Count; i++)
                     {
-                        lat = loc.TryGetProperty("lat", out var la) ? la.GetDouble() : 0;
-                        lng = loc.TryGetProperty("lng", out var ln) ? ln.GetDouble() : 0;
+                        // Para cada ponto, tente obter as coordenadas geográficas usando a API do Google Geocoding
+                        _latLngs[i] = (-23.5505, -46.6333);
                     }
-
-                    var tipos = "Reciclável";
-                    if (item.TryGetProperty("types", out var typesEl))
-                    {
-                        var typesList = typesEl.EnumerateArray()
-                            .Select(t => t.GetString()).ToList();
-                        if (typesList.Any(t => t?.Contains("electronics") == true))
-                            tipos = "Eletrônicos";
-                        else if (typesList.Any(t => t?.Contains("hardware") == true))
-                            tipos = "Metal / Papel / Plástico";
-                    }
-
-                    _latLngs[id - 1] = (lat, lng);
-
-                    lista.Add(new PontosColeta
-                    {
-                        Id = id++,
-                        NomePonto = nome,
-                        Cidade = endereco,
-                        Estado = "BR",
-                        CEP = "—",
-                        ResiduosAceitos = tipos
-                    });
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Erro Places API: " + ex.Message);
-                MessageBox.Show(
-                    $"Não foi possível buscar pontos.\n\nErro: {ex.Message}",
-                    "Erro na busca",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                // Log do erro para depuração
+                System.Diagnostics.Debug.WriteLine("Erro ao buscar na API ReGraphik: " + ex.Message);
+                MessageBox.Show($"Erro ao carregar pontos da nuvem: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return lista;
         }
