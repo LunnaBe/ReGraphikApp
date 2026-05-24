@@ -6,16 +6,16 @@ using Firebase.Database.Query;
 
 namespace ApiRestReGraphik.Repositories
 {
-    public class ReGraphikRepository : IReGraphikRepository
+    public class ResiduoRepository : IResiduo
     {
         // Cliente do Firebase para acessar o Firebase Realtime Database
         private readonly FirebaseClient _firebaseClient;
         // Nome do nó no Firebase Realtime Database onde os resíduos serão armazenados
         private const string ChildName = "residuos";
 
-        private readonly ILogger<ReGraphikRepository> _logger;
+        private readonly ILogger<ResiduoRepository> _logger;
 
-        public ReGraphikRepository(ILogger<ReGraphikRepository> logger, IConfiguration configuration)
+        public ResiduoRepository(ILogger<ResiduoRepository> logger, IConfiguration configuration)
         {
             var baseUrl = configuration["Firebase:RealtimeDatabaseUrl"];
 
@@ -65,7 +65,7 @@ namespace ApiRestReGraphik.Repositories
         /// </summary>
         /// <param name="id">ID do resíduo a ser buscado</param>
         /// <returns></returns>
-        public async Task<Residuo> GetById(int id)
+        public async Task<Residuo> GetById(string id)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace ApiRestReGraphik.Repositories
         /// <param name="id">ID do resíduo a ser atualizado</param>
         /// <param name="residuo">Objeto Residuo com os dados atualizados</param>
         /// <returns></returns>
-        public async Task Update(int id, Residuo residuo)
+        public async Task Update(string id, Residuo residuo)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace ApiRestReGraphik.Repositories
         /// </summary>
         /// <param name="id">ID do resíduo a ser excluído</param>
         /// <returns></returns>
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             try
             {

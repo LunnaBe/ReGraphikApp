@@ -5,7 +5,7 @@ namespace ApiRestReGraphik.Models
     public class Sugestao
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         [JsonPropertyName("tipo_residuo_aceito")]
         public required string TipoResiduoAceito { get; set; }

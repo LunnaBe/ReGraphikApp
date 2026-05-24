@@ -6,28 +6,28 @@ namespace ApiRestReGraphik.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ReGraphikController : ControllerBase
+    public class ResiduoController : ControllerBase
     {
-        private readonly ReGraphikService _reGraphikService;
-        private readonly ILogger<ReGraphikController> _logger;
+        private readonly ResiduoService _residuoService;
+        private readonly ILogger<ResiduoController> _logger;
 
         /// <summary>
-        /// Construtor da classe ReGraphikController, que recebe um logger e um serviço de ReGraphik para ser utilizado nas ações do controlador.
+        /// Construtor da classe ResiduoController, que recebe um logger e um serviço de Residuo para ser utilizado nas ações do controlador.
         /// </summary>
         /// <param name="logger">Logger para registrar informações e erros.</param>
-        /// <param name="reGraphikService">Serviço de ReGraphik para operações relacionadas.</param>
-        public ReGraphikController(ILogger<ReGraphikController> logger, ReGraphikService reGraphikService)
+        /// <param name="residuoService">Serviço de Residuo para operações relacionadas.</param>
+        public ResiduoController(ILogger<ResiduoController> logger, ResiduoService residuoService)
         {
             _logger = logger;
-            _reGraphikService = reGraphikService;
+            _residuoService = residuoService;
         }
 
 
         /// <summary>
-        ///  GET api/ReGraphik - Endpoint para obter dados do ReGraphik. Retorna um status 200 OK com os dados ou um status 500 Internal Server Error em caso de falha.
+        ///  GET api/Residuo - Endpoint para obter dados do Residuo. Retorna um status 200 OK com os dados ou um status 500 Internal Server Error em caso de falha.
         /// </summary>
         /// 
-        /// <remarks>Responsável por listar os dados do ReGraphik. Retornando uma coleção de objetos detalhando informações técnicas e operacionais de cada resíduo, 
+        /// <remarks>Responsável por listar os dados do Residuo. Retornando uma coleção de objetos detalhando informações técnicas e operacionais de cada resíduo, 
         /// com atributos como ID, tipo de resíduo, origem, especificação, projeto associado, quantidade, data de cadastro, condição, dimensões, observações, anexos e status.
         /// 
         /// Observação: Retorna um status 200 OK com os dados do ReGraphik ou um status 500 Internal Server Error em caso de falha.
@@ -44,12 +44,12 @@ namespace ApiRestReGraphik.Controllers
         {
             try
             {
-                var result = await _reGraphikService.Listar();
+                var result = await _residuoService.Listar();
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao obter dados do ReGraphik. Erro:{ex.Message}");
+                _logger.LogError($"Erro ao obter dados do Residuo. Erro:{ex.Message}");
                 throw new Exception("Ocorreu um erro ao processar a solicitação.");
             }
 
@@ -57,7 +57,7 @@ namespace ApiRestReGraphik.Controllers
         }
 
         /// <summary>
-        /// GET api/ReGraphik/{id} - Endpoint para obter um resíduo específico do ReGraphik com base no ID fornecido.
+        /// GET api/Residuo/{id} - Endpoint para obter um resíduo específico do Residuo com base no ID fornecido.
         /// </summary>
         /// 
         /// <remarks>Responsável por obter um resíduo específico do ReGraphik com base no ID fornecido. 
@@ -97,11 +97,11 @@ namespace ApiRestReGraphik.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(string id)
         {
             try
             {
-                var result = await _reGraphikService.ObterPorId(id);
+                var result = await _residuoService.ObterPorId(id);
                 if (result == null)
                 {
                     return NotFound($"Resíduo com ID {id} não encontrado.");
@@ -110,13 +110,13 @@ namespace ApiRestReGraphik.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao obter dados do ReGraphik com ID {id}. Erro:{ex.Message}");
+                _logger.LogError($"Erro ao obter dados do Residuo com ID {id}. Erro:{ex.Message}");
                 throw new Exception("Ocorreu um erro ao processar a solicitação.");
             }
         }
 
         /// <summary>
-        ///  Post api/ReGraphik - Endpoint para criar um novo resíduo no ReGraphik.
+        ///  Post api/Residuo - Criar um novo resíduo no ReGraphik.
         /// </summary>
         /// 
         /// <remarks>Responsável por criar um novo resíduo no ReGraphik.
@@ -160,19 +160,19 @@ namespace ApiRestReGraphik.Controllers
                     return BadRequest("Resíduo inválido.");
                 }
 
-                await _reGraphikService.Criar(residuo);
+                await _residuoService.Criar(residuo);
 
                 return CreatedAtAction(nameof(GetById), new { id = residuo.Id }, residuo);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao criar dados do ReGraphik. Erro:{ex.Message}");
+                _logger.LogError($"Erro ao criar dados do Residuo. Erro:{ex.Message}");
                 throw new Exception("Ocorreu um erro ao processar a solicitação.");
             }
         }
 
         /// <summary>
-        /// DELETE api/ReGraphik/{id} - Endpoint para atualizar um resíduo existente no ReGraphik com base no ID fornecido.
+        /// DELETE api/Residuo/{id} - Atualizar um resíduo existente no ReGraphik com base no ID fornecido.
         /// </summary>
         /// 
         /// <remarks>Responsável por atualizar um resíduo existente no ReGraphik com base no ID fornecido.
@@ -193,7 +193,7 @@ namespace ApiRestReGraphik.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Put(int id, [FromBody] Residuo residuo)
+        public async Task<IActionResult> Put(string id, [FromBody] Residuo residuo)
         {
             try
             {
@@ -202,24 +202,24 @@ namespace ApiRestReGraphik.Controllers
                     return BadRequest($"ID do resíduo inválido.");
                 }
 
-                var existing = await _reGraphikService.ObterPorId(id);
+                var existing = await _residuoService.ObterPorId(id);
                 if (existing == null)
                 {
                     return NotFound($"Resíduo com ID {id} não encontrado.");
                 }
 
-                await _reGraphikService.Atualizar(id, residuo);
+                await _residuoService.Atualizar(id, residuo);
                 return Ok($"Resíduo com ID {id} atualizado com sucesso.");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao atualizar dados do ReGraphik com ID {id}. Erro:{ex.Message}");
+                _logger.LogError($"Erro ao atualizar dados do Residuo com ID {id}. Erro:{ex.Message}");
                 throw new Exception("Ocorreu um erro ao processar a solicitação.");
             }
         }
 
         /// <summary>
-        /// DELETE api/ReGraphik/{id} - Excluir um resíduo do ReGraphik com base no ID fornecido. 
+        /// DELETE api/Residuo/{id} - Excluir um resíduo do ReGraphik com base no ID fornecido. 
         /// </summary>
         /// 
         /// <remarks>Responsável por excluir um resíduo do ReGraphik com base no ID fornecido. 
@@ -237,22 +237,22 @@ namespace ApiRestReGraphik.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             try
             {
-                var existing = await _reGraphikService.ObterPorId(id);
+                var existing = await _residuoService.ObterPorId(id);
                 if (existing == null)
                 {
                     return NotFound();
                 }
 
-                await _reGraphikService.Excluir(id);
-                return Ok();
+                await _residuoService.Excluir(id);
+                return Ok($"Resíduo com ID {id} excluído com sucesso.");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao excluir dados do ReGraphik com ID {id}. Erro:{ex.Message}");
+                _logger.LogError($"Erro ao excluir dados do Residuo com ID {id}. Erro:{ex.Message}");
                 throw new Exception("Ocorreu um erro ao processar a solicitação.");
             }
         }

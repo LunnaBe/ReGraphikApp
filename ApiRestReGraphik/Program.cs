@@ -11,8 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // Registra o repositório e o serviço do ReGraphik para que possam ser injetados em outros componentes da aplicação, como os controladores.
-builder.Services.AddScoped<IReGraphikRepository, ReGraphikRepository>();
-builder.Services.AddScoped<ReGraphikService>();
+builder.Services.AddScoped<IResiduo, ResiduoRepository>();
+builder.Services.AddScoped<ResiduoService>();
 
 // Configura o Swagger para incluir comentários XML, permitindo que as descrições dos endpoints sejam exibidas na documentação gerada.
 builder.Services.AddSwaggerGen(options =>
