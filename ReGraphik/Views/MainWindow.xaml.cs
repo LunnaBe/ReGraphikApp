@@ -1,4 +1,6 @@
-﻿using System.Windows;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using ReGraphik.Views.Pages;
 
@@ -11,14 +13,18 @@ namespace ReGraphik.Views
         public MainWindow()
         {
             InitializeComponent();
+            
+            // Inicializa a aplicação abrindo a Dashboard por padrão
             MainFrame.Navigate(new DashboardPage());
             _btnAtivo = BtnDashboard;
         }
 
+        // Altera visualmente o botão selecionado no menu lateral
         private void SetarNavAtivo(Button btn)
         {
             if (_btnAtivo != null)
                 _btnAtivo.Style = (Style)FindResource("NavBtn");
+            
             btn.Style = (Style)FindResource("NavBtnAtivo");
             _btnAtivo = btn;
         }
