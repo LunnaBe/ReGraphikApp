@@ -96,7 +96,7 @@ namespace ApiRestReGraphik.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao adicionar o ponto de coleta: {ex.Message}");
-                throw new Exception("Erro ao adicionar o ponto de coleta");
+                throw ex;
             }
         }
 

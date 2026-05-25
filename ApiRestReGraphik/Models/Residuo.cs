@@ -8,19 +8,19 @@ namespace ApiRestReGraphik.Models
         public string Id { get; set; }
 
         [JsonPropertyName("id_usuario")]
-        public required string IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
 
         [JsonPropertyName("tipo_residuo")]
-        public required string TipoResiduo { get; set; }
+        public string TipoResiduo { get; set; }
 
         [JsonPropertyName("origem")]
-        public required string Origem { get; set; }
+        public string Origem { get; set; }
 
         [JsonPropertyName("especificacao")]
-        public required string Especificacao { get; set; }
+        public string Especificacao { get; set; }
 
         [JsonPropertyName("projeto")]
-        public required string Projeto  { get; set; }
+        public string Projeto  { get; set; }
 
         [JsonPropertyName("quantidade")]
         public double Quantidade { get; set; }
@@ -38,12 +38,12 @@ namespace ApiRestReGraphik.Models
         public double? DimensoesLm { get; set; }
 
         [JsonPropertyName("observacao")]
-        public required string Observacao { get; set; }
+        public string Observacao { get; set; }
 
         [JsonPropertyName("anexo")]
-        public required string Anexo { get; set; }
+        public string Anexo { get; set; }
 
         [JsonPropertyName("status")]
-        public required string Status { get; set; }
+        public string Status { get; set; }
     }
 }

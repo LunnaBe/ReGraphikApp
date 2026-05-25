@@ -1,6 +1,8 @@
 ﻿using ApiRestReGraphik.Models;
 using ApiRestReGraphik.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ApiRestReGraphik.Controllers
 {
@@ -23,7 +25,7 @@ namespace ApiRestReGraphik.Controllers
         {
             _logger = logger;
             _pontosColetaService = pontosColetaService;
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
 
 
@@ -214,7 +216,10 @@ namespace ApiRestReGraphik.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao criar dados do Ponto de Coleta. Erro:{ex.Message}");
-                throw new Exception("Ocorreu um erro ao processar a solicitação.");
+                // Captura a mensagem mais profunda do erro(ex: erro do Entity Framework, Firebase, SQL, etc.)
+                var erroReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                return StatusCode(500, $"Erro Real no Backend: {erroReal}");
             }
         }
 

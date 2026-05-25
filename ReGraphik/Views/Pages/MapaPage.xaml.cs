@@ -89,15 +89,16 @@ namespace ReGraphik.Views.Pages
 
                 if (resultado != null)
                 {
-                    // Filtra os pontos pela cidade, ignorando maiúsculas/minúsculas
+                    // Filtra os pontos pela cidade
                     lista = resultado
-                        .Where(p => p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase))
+                        .Where(p => p.Cidade != null && p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
                     for (int i = 0; i < lista.Count; i++)
                     {
-                        // Para cada ponto, tente obter as coordenadas geográficas usando a API do Google Geocoding
-                        _latLngs[i] = (-23.5505, -46.6333);
+                        // Busca a coordenada real do endereço completo enviado do Firebase
+                        var coordenadas = await ObterCoordenadasAsync(lista[i].Cidade);
+                        _latLngs[i] = coordenadas;
                     }
                 }
             }
@@ -108,6 +109,33 @@ namespace ReGraphik.Views.Pages
                 MessageBox.Show($"Erro ao carregar pontos da nuvem: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return lista;
+        }
+
+        private async Task<(double lat, double lng)> ObterCoordenadasAsync(string endereco)
+        {
+            try
+            {
+                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(endereco)}&key={ApiKey}";
+                var json = await _http.GetStringAsync(url);
+
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                if (root.TryGetProperty("results", out var results) && results.GetArrayLength() > 0)
+                {
+                    var location = results[0].GetProperty("geometry").GetProperty("location");
+                    double lat = location.GetProperty("lat").GetDouble();
+                    double lng = location.GetProperty("lng").GetDouble();
+                    return (lat, lng);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Erro no Geocoding: " + ex.Message);
+            }
+
+            // Retorno padrão caso falhe (São Paulo) para não quebrar o mapa
+            return (-23.5505, -46.6333);
         }
 
         private void CarregarMapa(List<PontosColeta> pontos)

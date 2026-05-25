@@ -8,9 +8,9 @@ namespace ApiRestReGraphik.Models
         public string Id { get; set; }
 
         [JsonPropertyName("tipo_residuo_aceito")]
-        public required string TipoResiduoAceito { get; set; }
+        public string TipoResiduoAceito { get; set; }
 
         [JsonPropertyName("descricao_sugestao")]
-        public required string DescricaoSugestao { get; set; }
+        public string DescricaoSugestao { get; set; }
     }
 }
