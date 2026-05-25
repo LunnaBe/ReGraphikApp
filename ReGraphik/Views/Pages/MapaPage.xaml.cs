@@ -65,8 +65,7 @@ namespace ReGraphik.Views.Pages
             }
         }
 
-        private void MapaBrowser_Navigated(object sender,
-            System.Windows.Navigation.NavigationEventArgs e)
+        private void MapaBrowser_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
             _mapaCarregado = true;
             MapaPlaceholder.Visibility = Visibility.Collapsed;
@@ -77,65 +76,41 @@ namespace ReGraphik.Views.Pages
             var lista = new List<PontosColeta>();
             try
             {
-                // Substitua pela URL real da sua API
-                var url = $"https://webregraphik.runasp.net/api/pontoscoleta";
+                // Substitua pelo endereço real da sua API publicada
+                // Exemplo local: "https://localhost:7123/api/PontosColeta/google?cidade="
+                // Exemplo produção: "https://webregraphik.runasp.net/api/PontosColeta/google?cidade="
+                var urlApi = $"https://webregraphik.runasp.net/api/PontosColeta/google?cidade={Uri.EscapeDataString(cidade)}";
 
-                // Para fins de teste, vamos usar dados estáticos simulados
-                var json = await _http.GetStringAsync(url);
+                // Faz a chamada para a SUA API
+                var json = await _http.GetStringAsync(urlApi);
 
-                // Configurações para desserialização, ignorando diferenças de maiúsculas/minúsculas
+                // Deserializa os dados direto para a lista de objetos PontosColeta
                 var opcoes = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var resultado = JsonSerializer.Deserialize<List<PontosColeta>>(json, opcoes);
+                var pontosRetornados = JsonSerializer.Deserialize<List<PontosColeta>>(json, opcoes);
 
-                if (resultado != null)
+                if (pontosRetornados != null)
                 {
-                    // Filtra os pontos pela cidade
-                    lista = resultado
-                        .Where(p => p.Cidade != null && p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
+                    lista = pontosRetornados;
+                }
 
-                    for (int i = 0; i < lista.Count; i++)
-                    {
-                        // Busca a coordenada real do endereço completo enviado do Firebase
-                        var coordenadas = await ObterCoordenadasAsync(lista[i].Cidade);
-                        _latLngs[i] = coordenadas;
-                    }
+                // Alimenta o dicionário de coordenadas (lat/lng) para o Leaflet renderizar na tela
+                _latLngs.Clear();
+                for (int i = 0; i < lista.Count; i++)
+                {
+                    // Lemos diretamente os campos 'Lat' e 'Lng' que o Firebase e a API nos devolveram!
+                    _latLngs[i] = (lista[i].Lat, lista[i].Lng);
                 }
             }
             catch (Exception ex)
             {
-                // Log do erro para depuração
-                System.Diagnostics.Debug.WriteLine("Erro ao buscar na API ReGraphik: " + ex.Message);
-                MessageBox.Show($"Erro ao carregar pontos da nuvem: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Diagnostics.Debug.WriteLine("Erro ao consultar API Backend: " + ex.Message);
+                MessageBox.Show(
+                    $"Não foi possível carregar pontos através do servidor.\n\nDetalhes: {ex.Message}",
+                    "Erro de Sincronização",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
             return lista;
-        }
-
-        private async Task<(double lat, double lng)> ObterCoordenadasAsync(string endereco)
-        {
-            try
-            {
-                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(endereco)}&key={ApiKey}";
-                var json = await _http.GetStringAsync(url);
-
-                using var doc = JsonDocument.Parse(json);
-                var root = doc.RootElement;
-
-                if (root.TryGetProperty("results", out var results) && results.GetArrayLength() > 0)
-                {
-                    var location = results[0].GetProperty("geometry").GetProperty("location");
-                    double lat = location.GetProperty("lat").GetDouble();
-                    double lng = location.GetProperty("lng").GetDouble();
-                    return (lat, lng);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Erro no Geocoding: " + ex.Message);
-            }
-
-            // Retorno padrão caso falhe (São Paulo) para não quebrar o mapa
-            return (-23.5505, -46.6333);
         }
 
         private void CarregarMapa(List<PontosColeta> pontos)
@@ -204,15 +179,12 @@ var pontos = {marcadoresJs};
 var map = L.map('map', {{
     center: [{centerLat.ToString(System.Globalization.CultureInfo.InvariantCulture)},
              {centerLng.ToString(System.Globalization.CultureInfo.InvariantCulture)}],
-    zoom: {zoom}
-}});
+    zoom: {zoom}}});
 L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-    attribution: '© OpenStreetMap', maxZoom: 19
-}}).addTo(map);
+    attribution: '© OpenStreetMap', maxZoom: 19}}).addTo(map);
 var iconPonto = L.divIcon({{
     html: '<div style=""background:#2563EB;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)""></div>',
-    iconSize: [30,30], iconAnchor: [15,30], popupAnchor: [0,-30], className: ''
-}});
+    iconSize: [30,30], iconAnchor: [15,30], popupAnchor: [0,-30], className: ''}});
 var markers = [];
 pontos.forEach(function(p) {{
     if (p.lat === 0 && p.lng === 0) return;
@@ -222,16 +194,13 @@ pontos.forEach(function(p) {{
         '<div class=""popup-row"">📍 <span>' + p.endereco + '</span></div>' +
         '<div class=""badge"">♻ ' + p.tipos + '</div>'
     , {{ maxWidth: 260 }});
-    markers[p.idx] = m;
-}});
+    markers[p.idx] = m;}});
 var validos = markers.filter(Boolean);
 if (validos.length > 0) {{
-    map.fitBounds(L.featureGroup(validos).getBounds().pad(0.2));
-}}
+    map.fitBounds(L.featureGroup(validos).getBounds().pad(0.2));}}
 window.centralizarPonto = function(idx) {{
     var m = markers[idx];
-    if (m) {{ map.setView(m.getLatLng(), 16); m.openPopup(); }}
-}};
+    if (m) {{ map.setView(m.getLatLng(), 16); m.openPopup(); }}}};
 </script>
 </body>
 </html>";

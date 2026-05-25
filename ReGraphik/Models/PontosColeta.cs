@@ -21,5 +21,11 @@ namespace ApiRestReGraphik.Models
 
         [JsonPropertyName("residuos_aceitos")]
         public string ResiduosAceitos { get; set; }
+
+        [JsonPropertyName("latitude")]
+        public double Lat { get; set; }
+
+        [JsonPropertyName("longitude")]
+        public double Lng { get; set; }
     }
 }

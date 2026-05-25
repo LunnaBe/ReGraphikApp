@@ -6,20 +6,9 @@ namespace ApiRestReGraphik.Services
 {
     public class PontosColetaService
     {
-        // Logger para registrar informações e erros relacionados ao serviço ReGraphik
-        private readonly ILogger<PontosColetaService> _logger;
         private readonly FirebaseClient _firebaseClient;
+        private readonly ILogger<PontosColetaService> _logger;
         private const string NodeName = "pontos_coleta";
-
-        /// <summary>
-        ///  Construtor da classe PontosColetaService que recebe as dependências necessárias, para permitir o registro de informações e erros durante a execução dos métodos do serviço.
-        /// </summary>
-        /// <param name="logger">Logger para registrar informações e erros</param>
-        public PontosColetaService(ILogger<PontosColetaService> logger)
-        {
-            _logger = logger;
-            _firebaseClient = new FirebaseClient("https://regraphikfirebase-default-rtdb.firebaseio.com/");
-        }
 
         /// <summary>
         /// Lista todos os pontos de coleta cadastrados no ReGraphik, utilizando o repositório para acessar os dados e registrando qualquer erro que possa ocorrer durante a operação.
@@ -87,16 +76,17 @@ namespace ApiRestReGraphik.Services
                 }
 
                 // Adiciona o ponto de coleta ao Firebase usando o ID como chave
-                await _firebaseClient
-                    .Child(NodeName)
-                    .Child(pontosColeta.Id)
-                    .PutAsync(pontosColeta);
+                var resultado = await _firebaseClient
+                                .Child("pontoscoleta")
+                                .PostAsync(pontosColeta);
+
+                pontosColeta.Id = resultado.Key;
 
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao adicionar o ponto de coleta: {ex.Message}");
-                throw ex;
+                throw new Exception("Erro ao adicionar o ponto de coleta");
             }
         }
 

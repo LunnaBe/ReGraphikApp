@@ -21,11 +21,11 @@ namespace ApiRestReGraphik.Controllers
         /// </summary>
         /// <param name="logger">Logger para registrar informações e erros.</param>
         /// <param name="pontosColetaService">Serviço de PontosColeta para operações relacionadas.</param>
-        public PontosColetaController(ILogger<PontosColetaController> logger, PontosColetaService pontosColetaService, HttpClient httpClient)
+        public PontosColetaController(ILogger<PontosColetaController> logger, PontosColetaService pontosColetaService, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _pontosColetaService = pontosColetaService;
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient(); // Cria uma instância de HttpClient usando o IHttpClientFactory para realizar requisições HTTP, como as chamadas à API do Google Maps.
         }
 
 
@@ -71,53 +71,75 @@ namespace ApiRestReGraphik.Controllers
         {
             if (string.IsNullOrWhiteSpace(cidade))
             {
-                return BadRequest("O parâmetro 'cidade' é obrigatório para a busca externa.");
+                return BadRequest("O parâmetro 'cidade' é obrigatório.");
             }
 
             try
             {
-                var lista = new List<PontosColeta>();
+                var listaGoogle = new List<PontosColeta>();
                 var query = $"ponto de coleta reciclagem {cidade}";
-                var url = $"https://maps.googleapis.com/maps/api/place/textsearch/json" +
-                          $"?query={Uri.EscapeDataString(query)}&key={ApiKey}";
+                var url = $"https://maps.googleapis.com/maps/api/place/textsearch/json?query={Uri.EscapeDataString(query)}&key={ApiKey}";
 
+                if (_httpClient == null)
+                {
+                    return StatusCode(500, "Erro de infraestrutura: HttpClient não injetado.");
+                }
+
+                // 1. Busca os dados na API do Google Maps
                 var json = await _httpClient.GetStringAsync(url);
                 using var doc = System.Text.Json.JsonDocument.Parse(json);
                 var root = doc.RootElement;
 
-                if (!root.TryGetProperty("results", out var results)) return Ok(lista);
+                if (!root.TryGetProperty("results", out var results)) return Ok(listaGoogle);
 
-                int idLocal = 1;
+                // 2. Mapeia e envia para o Firebase
                 foreach (var item in results.EnumerateArray())
                 {
                     var nome = item.TryGetProperty("name", out var n) ? n.GetString() ?? "Sem nome" : "Sem nome";
                     var endereco = item.TryGetProperty("formatted_address", out var a) ? a.GetString() ?? cidade : cidade;
 
                     var tipos = "Reciclável";
-                    if (item.TryGetProperty("types", out var typesEl))
+                    if (item.TryGetProperty("types", out var typesEl) && typesEl.ValueKind == System.Text.Json.JsonValueKind.Array)
                     {
-                        var typesList = typesEl.EnumerateArray().Select(t => t.GetString()).ToList();
-                        if (typesList.Any(t => t?.Contains("electronics") == true)) tipos = "Eletrônicos";
-                        else if (typesList.Any(t => t?.Contains("hardware") == true)) tipos = "Metal / Papel / Plástico";
+                        var typesList = typesEl.EnumerateArray().Select(t => t.GetString()).Where(t => !string.IsNullOrEmpty(t)).ToList();
+                        if (typesList.Any(t => t.Contains("electronics", StringComparison.OrdinalIgnoreCase))) 
+                            tipos = "Eletrônicos";
+                        else if (typesList.Any(t => t.Contains("hardware", StringComparison.OrdinalIgnoreCase))) 
+                            tipos = "Metal / Papel / Plástico";
                     }
 
-                    lista.Add(new PontosColeta
+                    var novoPonto = new PontosColeta
                     {
-                        Id = idLocal++.ToString(),
+                        // Deixe o Id vazio ou nulo se o seu serviço do Firebase gerar IDs automáticos (Push)
                         NomePonto = nome,
                         Cidade = endereco,
                         Estado = "BR",
                         CEP = "—",
                         ResiduosAceitos = tipos
-                    });
+                    };
+
+                    try 
+                    {
+                        // 3. SALVA NO FIREBASE através do seu Service existente
+                        await _pontosColetaService.Criar(novoPonto);
+                        listaGoogle.Add(novoPonto);
+                    }
+                    catch (Exception exService)
+                    {
+                        _logger.LogWarning($"Não foi possível salvar o ponto '{nome}' no Firebase, mas continuará no fluxo: {exService.Message}");
+                        // Mesmo se falhar em um ponto específico, adicionamos à lista para não quebrar a experiência do usuário
+                        listaGoogle.Add(novoPonto);
+                    }
                 }
 
-                return Ok(lista);
+                // 4. Retorna a lista de pontos vindos do Google (e agora salvos no Firebase) para o WPF
+                return Ok(listaGoogle);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao consultar dados no Google Maps. Erro:{ex.Message}");
-                return StatusCode(500, "Erro interno ao processar dados da API externa.");
+                _logger.LogError($"Erro ao processar busca e salvamento: {ex.Message}");
+                var erroDetalhado = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return StatusCode(500, $"Erro Real no Processamento: {erroDetalhado}");
             }
         }
 
@@ -168,7 +190,7 @@ namespace ApiRestReGraphik.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao obter dados do Ponto de Coleta com ID {id}. Erro:{ex.Message}");
-                throw new Exception("Ocorreu um erro ao processar a solicitação.");
+                return StatusCode(500, $"Erro ao processar a solicitação: {ex.Message}");
             }
         }
 
@@ -266,7 +288,7 @@ namespace ApiRestReGraphik.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao atualizar dados do Ponto de Coleta com ID {id}. Erro:{ex.Message}");
-                throw new Exception("Ocorreu um erro ao processar a solicitação.");
+                return StatusCode(500, $"Erro ao processar a atualização: {ex.Message}");
             }
         }
 
@@ -305,7 +327,7 @@ namespace ApiRestReGraphik.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao excluir dados do Ponto de Coleta com ID {id}. Erro:{ex.Message}");
-                throw new Exception("Ocorreu um erro ao processar a solicitação.");
+                return StatusCode(500, $"Erro ao processar a exclusão: {ex.Message}");
             }
         }
 

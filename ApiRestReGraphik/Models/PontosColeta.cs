@@ -20,6 +20,12 @@ namespace ApiRestReGraphik.Models
         public string CEP { get; set; } 
 
         [JsonPropertyName("residuos_aceitos")]
-        public string ResiduosAceitos { get; set; } 
+        public string ResiduosAceitos { get; set; }
+
+        [JsonPropertyName("latitude")]
+        public double Lat { get; set; }
+
+        [JsonPropertyName("longitude")]
+        public double Lng { get; set; }
     }
 }
