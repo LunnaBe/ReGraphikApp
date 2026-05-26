@@ -143,7 +143,7 @@ ReGraphikApp/
 │   │   └── Pages/
 │   │       ├── DashboardPage.xaml
 │   │       ├── ResiduosPage.xaml
-│   │       ├── PontosColetaPage.xaml
+│   │       ├── EstoquereversoPage.xaml
 │   │       ├── MapaPage.xaml
 │   │       └── RelatoriosPage.xaml
 │   ├── ViewModels/
