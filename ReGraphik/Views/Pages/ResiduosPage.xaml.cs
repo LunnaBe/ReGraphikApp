@@ -51,5 +51,15 @@ namespace ReGraphik.Views.Pages
             MessageBox.Show($"Resíduo ({material} - {quantidade}kg) validado! Pronto para enviar para o backend.",
                             "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void CboCondicao_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void TxtDimensaoX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
