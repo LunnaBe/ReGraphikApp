@@ -29,24 +29,61 @@ namespace ReGraphik.Views.Pages
         private async void BtnBuscar_Click(object sender, RoutedEventArgs e)
         {
             var cidade = TxtCidade.Text.Trim();
-            if (string.IsNullOrWhiteSpace(cidade)) return;
 
-            EstadoVazio.Visibility = Visibility.Collapsed;
-            EstadoCarregando.Visibility = Visibility.Visible;
-            ListaPontos.ItemsSource = null;
-            _latLngs.Clear();
+            if (string.IsNullOrWhiteSpace(cidade))
+            {
+                MessageBox.Show("Por favor, digite o nome de uma cidade.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-            var pontos = await BuscarPontosAsync(cidade);
+            try
+            {
+                // 1. Envia a requisição POST para a API fazer a sincronização direto no Firebase
+                string urlSincronizar = $"https://webregraphik.runasp.net/api/PontosColeta/sincronizar?cidade={Uri.EscapeDataString(cidade)}";
+                var conteudoVazio = new StringContent("", System.Text.Encoding.UTF8, "application/json");
 
-            _pontosAtuais = pontos;
-            EstadoCarregando.Visibility = Visibility.Collapsed;
-            TxtContagem.Text = pontos.Count.ToString();
-            ListaPontos.ItemsSource = pontos;
+                var response = await _http.PostAsync(urlSincronizar, conteudoVazio);
 
-            if (pontos.Count == 0)
-                EstadoVazio.Visibility = Visibility.Visible;
+                if (response.IsSuccessStatusCode)
+                {
+                    // 2. Se a sincronização deu certo, chamamos a função para trazer os dados atualizados para a tela
+                    MessageBox.Show($"Sincronização de '{cidade}' concluída com sucesso com os dados do Google!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            CarregarMapa(pontos);
+                    // Busca os pontos atualizados para renderizar no mapa do Leaflet
+                    var pontosSalvos = await BuscarPontosDoBancoAsync();
+
+                    // Filtra na tela para exibir apenas os pontos da cidade buscada
+                    _pontosAtuais = pontosSalvos
+                        .Where(p => p.Cidade != null && p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+
+                    // Atualiza o dicionário de coordenadas da tela
+                    _latLngs.Clear();
+                    for (int i = 0; i < _pontosAtuais.Count; i++)
+                    {
+                        _latLngs[i] = (_pontosAtuais[i].Lat, _pontosAtuais[i].Lng);
+                    }
+
+                    // Atualiza a ListView lateral com os pontos encontrados
+                    ListaPontos.ItemsSource = null;
+                    ListaPontos.ItemsSource = _pontosAtuais;
+
+                    // Esconde o placeholder do mapa enquanto carrega os dados
+                    EstadoVazio.Visibility = Visibility.Collapsed;
+
+                    // Alimenta o componente visual do mapa
+                    CarregarMapa(_pontosAtuais);
+                }
+                else
+                {
+                    string erroApi = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Erro na API ao sincronizar: {erroApi}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao se conectar com o servidor: {ex.Message}", "Erro de Conexão", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void PontoItem_Click(object sender, MouseButtonEventArgs e)
@@ -71,18 +108,15 @@ namespace ReGraphik.Views.Pages
             MapaPlaceholder.Visibility = Visibility.Collapsed;
         }
 
-        private async Task<List<PontosColeta>> BuscarPontosAsync(string cidade)
+        private async Task<List<PontosColeta>> BuscarPontosDoBancoAsync()
         {
             var lista = new List<PontosColeta>();
             try
             {
-                // Monta a URL da API do backend, garantindo que o nome da cidade seja corretamente codificado para a URL
-                var urlApi = $"https://webregraphik.runasp.net/api/PontosColeta/google?cidade={Uri.EscapeDataString(cidade)}";
-
-                // Consulta a API do backend para obter os pontos de coleta da cidade
+                // Rota GET pura da API que lista tudo que está gravado no Firebase
+                var urlApi = "https://webregraphik.runasp.net/api/PontosColeta";
                 var resposta = await _http.GetAsync(urlApi);
 
-                // Se a resposta for bem-sucedida, processa os dados retornados
                 if (resposta.IsSuccessStatusCode)
                 {
                     var json = await resposta.Content.ReadAsStringAsync();
@@ -93,33 +127,11 @@ namespace ReGraphik.Views.Pages
                     {
                         lista = pontosRetornados;
                     }
-
-                    _latLngs.Clear();
-                    for (int i = 0; i < lista.Count; i++)
-                    {
-                        _latLngs[i] = (lista[i].Lat, lista[i].Lng);
-                    }
-                }
-                else
-                {
-                    // Se o backend retornou erro (Cidade não cadastrada), lê o texto enviado pela API
-                    var mensagemErroDoServidor = await resposta.Content.ReadAsStringAsync();
-
-                    MessageBox.Show(
-                        mensagemErroDoServidor,
-                        "Busca Não Permitida",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Erro ao consultar API Backend: " + ex.Message);
-                MessageBox.Show(
-                    $"Não foi possível processar a requisição.\n\nDetalhes: {ex.Message}",
-                    "Erro de Comunicação",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                System.Diagnostics.Debug.WriteLine("Erro ao listar pontos do banco: " + ex.Message);
             }
             return lista;
         }

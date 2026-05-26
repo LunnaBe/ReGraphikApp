@@ -64,39 +64,28 @@ namespace ApiRestReGraphik.Controllers
         }
 
         /// <summary>
-        /// GET api/PontosColeta/google?cidade=... - Busca pontos de coleta na API do Google Maps com base na cidade fornecida.
+        /// POST api/PontosColeta/sincronizar?cidade=... - Busca os dados no Google e grava direto no Firebase.
         /// </summary>
-        [HttpGet("google")]
+        [HttpPost("sincronizar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetFromGoogle([FromQuery] string cidade)
+        public async Task<IActionResult> SincronizarCidade([FromQuery] string cidade)
         {
             if (string.IsNullOrWhiteSpace(cidade))
             {
-                return BadRequest("O parâmetro 'cidade' é obrigatório.");
+                return BadRequest("O parâmetro 'cidade' é obrigatório para a sincronização.");
             }
 
             try
             {
-                // 1. 🛑 VALIDAÇÃO: Busca os pontos existentes no Firebase para validar a cidade
-                var pontosNoBanco = await _pontosColetaService.Listar();
+                // 1. Puxa os dados que já existem no Firebase para evitar duplicidade
+                var pontosNoBanco = (await _pontosColetaService.Listar())?.ToList() ?? new List<PontosColeta>();
 
-                bool cidadeExisteNoFirebase = pontosNoBanco.Any(p =>
-                    p.Cidade != null &&
-                    p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase));
-
-                // Se NÃO existir a cidade no banco, barra a operação
-                if (!cidadeExisteNoFirebase)
-                {
-                    return BadRequest($"A cidade '{cidade}' não está autorizada ou cadastrada no sistema.");
-                }
-
-                // 2. Se a cidade existe, busca os dados atualizados no Google Maps
-                var listaGoogle = new List<PontosColeta>();
-                var query = $"ponto de coleta reciclagem {cidade}";
+                // 2. Faz a busca diretamente na API do Google Maps
                 var apiKey = _configuration["GoogleMaps:ApiKey"];
-                var url = $"https://maps.googleapis.com/maps/api/place/textsearch/json?query={Uri.EscapeDataString(query)}&key={apiKey}";
+                var query = Uri.EscapeDataString($"ponto de coleta reciclagem {cidade}");
+                var url = $"https://maps.googleapis.com/maps/api/place/textsearch/json?query={query}&key={apiKey}";
 
                 if (_httpClient == null)
                 {
@@ -105,70 +94,67 @@ namespace ApiRestReGraphik.Controllers
 
                 var json = await _httpClient.GetStringAsync(url);
                 using var doc = System.Text.Json.JsonDocument.Parse(json);
-                var root = doc.RootElement;
 
-                if (!root.TryGetProperty("results", out var results)) return Ok(listaGoogle);
-
-                // 3. Itera sobre os resultados do Google, salva no Firebase e joga na lista
-                foreach (var item in results.EnumerateArray())
+                if (!doc.RootElement.TryGetProperty("results", out var results))
                 {
-                    var nome = item.TryGetProperty("name", out var n) ? n.GetString() ?? "Sem nome" : "Sem nome";
-                    var endereco = item.TryGetProperty("formatted_address", out var a) ? a.GetString() ?? cidade : cidade;
-
-                    double latitudeReal = 0;
-                    double longitudeReal = 0;
-                    if (item.TryGetProperty("geometry", out var geometry) && geometry.TryGetProperty("location", out var location))
-                    {
-                        if (location.TryGetProperty("lat", out var latProp)) latitudeReal = latProp.GetDouble();
-                        if (location.TryGetProperty("lng", out var lngProp)) longitudeReal = lngProp.GetDouble();
-                    }
-
-                    var tipos = "Reciclável";
-                    if (item.TryGetProperty("types", out var typesEl) && typesEl.ValueKind == System.Text.Json.JsonValueKind.Array)
-                    {
-                        var typesList = typesEl.EnumerateArray().Select(t => t.GetString()).Where(t => !string.IsNullOrEmpty(t)).ToList();
-                        if (typesList.Any(t => t.Contains("electronics", StringComparison.OrdinalIgnoreCase)))
-                            tipos = "Eletrônicos";
-                        else if (typesList.Any(t => t.Contains("hardware", StringComparison.OrdinalIgnoreCase)))
-                            tipos = "Metal / Papel / Plástico";
-                    }
-
-                    var novoPonto = new PontosColeta
-                    {
-                        NomePonto = nome,
-                        Cidade = endereco,
-                        Estado = "BR",
-                        CEP = "—",
-                        ResiduosAceitos = tipos,
-                        Lat = latitudeReal,
-                        Lng = longitudeReal
-                    };
-
-                    try
-                    {
-                        // 🔥 ENVIA PARA O FIREBASE: Como a cidade está pré-autorizada, salva o ponto!
-                        await _pontosColetaService.Criar(novoPonto);
-
-                        // O método 'Criar' preenche automaticamente o novoPonto.Id com a chave gerada pelo Firebase
-                        listaGoogle.Add(novoPonto);
-                    }
-                    catch (Exception exService)
-                    {
-                        // Se um ponto falhar o envio por rede, gera um ID temporário para o mapa não quebrar e continua
-                        _logger.LogWarning($"Falha ao registrar ponto '{nome}' no Firebase: {exService.Message}");
-                        novoPonto.Id = Guid.NewGuid().ToString();
-                        listaGoogle.Add(novoPonto);
-                    }
+                    return Ok("Nenhum dado encontrado no Google Maps para esta cidade.");
                 }
 
-                // Retorna a lista com os IDs oficiais gerados pelo Firebase para o WPF
-                return Ok(listaGoogle);
+                int totalSalvo = 0;
+                int totalIgnorado = 0;
+
+                // 3. Varre os resultados e salva direto no banco de dados
+                foreach (var item in results.EnumerateArray())
+                {
+                    var nome = item.TryGetProperty("name", out var n) ? n.GetString() : "Sem nome";
+
+                    double lat = 0, lng = 0;
+                    if (item.TryGetProperty("geometry", out var geo) && geo.TryGetProperty("location", out var loc))
+                    {
+                        lat = loc.TryGetProperty("lat", out var la) ? la.GetDouble() : 0;
+                        lng = loc.TryGetProperty("lng", out var ln) ? ln.GetDouble() : 0;
+                    }
+
+                    // 🛑 ANTI-DUPLICAÇÃO: Se as coordenadas já existem no Firebase, pula para não duplicar
+                    bool jaExiste = pontosNoBanco.Any(p => p.Lat == lat && p.Lng == lng);
+                    if (jaExiste)
+                    {
+                        totalIgnorado++;
+                        continue;
+                    }
+
+                    // Cria o objeto modelo
+                    var novoPonto = new PontosColeta
+                    {
+                        Id = Guid.NewGuid().ToString(), // ID gerado na API para não ficar null
+                        NomePonto = nome,
+                        Cidade = cidade,
+                        Estado = "BR",
+                        CEP = "—",
+                        ResiduosAceitos = "Reciclável",
+                        Lat = lat,
+                        Lng = lng
+                    };
+
+                    // Envia diretamente para o Firebase
+                    await _pontosColetaService.Criar(novoPonto);
+
+                    // Adiciona na lista local para o caso do Google mandar dois itens iguais na mesma resposta
+                    pontosNoBanco.Add(novoPonto);
+                    totalSalvo++;
+                }
+
+                return Ok(new
+                {
+                    Mensagem = $"Sincronização de '{cidade}' concluída com sucesso.",
+                    PontosSalvos = totalSalvo,
+                    PontosIgnoradosPorDuplicidade = totalIgnorado
+                });
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro no processamento combinado: {ex.Message}");
-                var erroDetalhado = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                return StatusCode(500, $"Erro Real no Backend: {erroDetalhado}");
+                _logger.LogError($"Erro ao sincronizar dados: {ex.Message}");
+                return StatusCode(500, $"Erro interno ao salvar no banco: {ex.Message}");
             }
         }
 
