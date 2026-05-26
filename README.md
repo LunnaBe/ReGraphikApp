@@ -21,7 +21,6 @@
 - [Estrutura do Repositório](#estrutura-do-repositório)
 - [API REST — Endpoints](#api-rest--endpoints)
 - [Modelos de Dados](#modelos-de-dados)
-- [Frontend Desktop (WPF)](#frontend-desktop-wpf)
 - [Integrações Externas](#integrações-externas)
 - [Como Executar](#como-executar)
 - [Documentação](#documentação)
@@ -167,6 +166,55 @@ ReGraphikApp/
 ```
  
 ---
+### RelayCommand — Padrão de Binding
+ 
+O padrão `ICommand` garante que a View nunca acessa a ViewModel diretamente:
+ 
+```csharp
+// RelayCommand.cs
+public class RelayCommand : ICommand
+{
+    Action<object> _execute;
+    Func<object, bool> _canExecute;
+ 
+    public bool CanExecute(object p) => _canExecute?.Invoke(p) ?? true;
+    public void Execute(object p)    => _execute(p);
+}
+```
+ 
+```xml
+<!-- Binding na View (XAML) — zero code-behind -->
+<Button Command="{Binding SalvarCommand}"
+        CommandParameter="{Binding Residuo}"/>
+```
+ 
+### GooglePlacesService — Async/Await
+ 
+Service completamente desacoplada da ViewModel, garantindo que a UI nunca trava durante chamadas HTTP externas:
+ 
+```csharp
+// GooglePlacesService.cs
+public class GooglePlacesService
+{
+    private readonly HttpClient _http;
+ 
+    public async Task<List<PontosColeta>> BuscarPontosAsync(double lat, double lng)
+    {
+        var url = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
+                  $"?location={lat},{lng}&radius=2000&key={_key}";
+ 
+        var response = await _http.GetAsync(url);   // não bloqueia a UI thread
+        var json     = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<List<PontosColeta>>(json);
+    }
+}
+```
+ 
+- **Async/Await** garante UI responsiva durante chamadas HTTP externas
+- **Service desacoplada** — ViewModel não toca no HttpClient
+- **Injeção via construtor** habilita testes unitários com mocks
+---
+
 
 ## API REST — Endpoints
  
@@ -297,8 +345,7 @@ A janela principal (`MainWindow`) possui uma barra lateral de navegação com 5 
 |---|---|---|
 | Dashboard | Em desenvolvimento | Painel com visão geral do sistema |
 | Cadastrar Resíduos | Em desenvolvimento | Formulário de cadastro de resíduos |
-| Pontos de Coleta | Em desenvolvimento | Lista de pontos cadastrados |
-| Mapa | Funcional | Mapa interativo com busca por cidade |
+| Mapa/Ponto de Coleta | Funcional | Mapa interativo com busca por cidade |
 | Relatórios | Em desenvolvimento | Geração de relatórios |
 
 ## Integrações Externas
