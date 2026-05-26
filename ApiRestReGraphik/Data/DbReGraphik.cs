@@ -15,7 +15,7 @@ namespace ApiRestReGraphik.Data
         {
             // Obtém o caminho do arquivo de credenciais do Firebase a partir do arquivo de configuração
             var credentialJson =
-                configuration["Firebase:KeyFilePath"];
+                configuration["Firebase:CredentialFilePath"];
 
             // Obtém o diretório de execução da aplicação
             var pastaExecucao =
