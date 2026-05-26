@@ -42,7 +42,7 @@
         </Style>
 
         <Style x:Key="NavBtnAtivo" TargetType="Button" BasedOn="{StaticResource NavBtn}">
-            <Setter Property="Background" Value="#1D4ED8"/>
+            <Setter Property="Background" Value="#022654"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </Window.Resources>
@@ -53,7 +53,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Background="#2563EB">
+        <Border Background="#093e75">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -61,11 +61,15 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
-                    Text="ReGraphik"
-                    Foreground="White"
-                    FontSize="26"
-                    FontWeight="Bold"
-                    Margin="20,24,20,20"/>
+                   Foreground="White"
+                   FontSize="26"
+                   FontWeight="Bold"
+                   Margin="20,24,20,20">    
+                    <TextBlock.Inlines>
+                        <Run Text="♻️ "/>
+                        <Run Text="ReGraphik"/>
+                    </TextBlock.Inlines>
+                </TextBlock>
 
                 <StackPanel Grid.Row="1">
                     <Button x:Name="BtnDashboard"
