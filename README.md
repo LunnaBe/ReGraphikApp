@@ -58,4 +58,29 @@ Transformação de resíduos em matéria-prima para personalização de novos pr
 Algoritmos de sugestão que relacionam cada tipo de resíduo cadastrado à melhor forma de reaproveitamento, reduzindo desperdício de forma inteligente.
  
 ---
+
+## Arquitetura
+ 
+O projeto segue rigorosamente o padrão **MVVM (Model-View-ViewModel)** na camada de apresentação e uma arquitetura de **serviços desacoplados** na API REST.
+ 
+```
+ReGraphikApp/
+├── ApiRestReGraphik/          # Backend — ASP.NET Core REST API
+│   ├── Controllers/           # Endpoints HTTP (CRUD completo)
+│   ├── Services/              # Regras de negócio e acesso ao Firebase
+│   ├── Models/                # Entidades do domínio
+│   ├── Data/                  # Configuração do Firebase Client
+│   └── Program.cs             # Configuração da aplicação, DI, Swagger, CORS
+│
+├── ReGraphik/                 # Frontend — WPF Desktop (MVVM)
+│   ├── Views/                 # Janelas e páginas XAML
+│   │   └── Pages/             # Dashboard, Resíduos, Pontos de Coleta, Mapa, Relatórios
+│   ├── ViewModels/            # Lógica de apresentação (BaseViewModel, ResiduoViewModel)
+│   ├── Models/                # Espelho das entidades do domínio
+│   ├── Services/              # GooglePlacesService (integração com Maps)
+│   └── Commands/              # RelayCommand (padrão Command do MVVM)
+│
+├── Modelagem/                 # Documentação técnica (PDFs)
+└── Banco de Dados/            # Scripts e documentação do banco
+```
  
