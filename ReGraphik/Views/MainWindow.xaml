@@ -86,12 +86,12 @@
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="BtnPontos"
+                    <Button x:Name="BtnEstoqueReverso"
                             Style="{StaticResource NavBtn}"
-                            Click="Pontos_Click">
+                            Click="EstoqueReverso_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📍 " FontSize="15"/>
-                            <TextBlock Text="Pontos de Coleta"/>
+                            <TextBlock Text="Estoque Reverso"/>
                         </StackPanel>
                     </Button>
 

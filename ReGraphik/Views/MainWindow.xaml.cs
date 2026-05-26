@@ -41,10 +41,10 @@ namespace ReGraphik.Views
             MainFrame.Navigate(new ResiduosPage());
         }
 
-        private void Pontos_Click(object sender, RoutedEventArgs e)
+        private void EstoqueReverso_Click(object sender, RoutedEventArgs e)
         {
-            SetarNavAtivo(BtnPontos);
-            MainFrame.Navigate(new PontosColetaPage());
+            SetarNavAtivo(BtnEstoqueReverso);
+            MainFrame.Navigate(new EstoqueReversoPage());
         }
 
         private void Mapa_Click(object sender, RoutedEventArgs e)
