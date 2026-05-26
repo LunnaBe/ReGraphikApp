@@ -375,3 +375,33 @@ dotnet run
 3. Certifique-se que a API está em execução
 4. Pressione `F5` para rodar
 ---
+## Documentação
+ 
+A estrutura de dados e o planejamento técnico completo estão disponíveis nas pastas do repositório:
+ 
+- [MiniMundo e Demanda](./Modelagem/MiniMundo%20Demanda.pdf) — descrição do problema e contexto do negócio
+- [Modelo Conceitual](./Modelagem/Modelo%20Conceitual.pdf) — diagrama entidade-relacionamento conceitual
+- [Modelo Lógico](./Modelagem/Modelo%20L%C3%B3gico.pdf) — estrutura lógica do banco de dados
+- [Modelo Físico](./Modelagem/Modelo%20F%C3%ADsico.pdf) — script e estrutura física do banco
+- [Documentação do Banco](./Banco%20de%20Dados/Documenta%C3%A7%C3%A3o%20Cria%C3%A7%C3%A3o%20Modelagem.pdf) — documentação de criação e modelagem
+A documentação interativa da API está disponível via **Swagger** ao rodar o projeto — é a página inicial da aplicação.
+ 
+---
+ 
+## Integrantes
+ 
+Projeto desenvolvido por alunos do SENAI:
+ 
+| Nome |
+|---|
+| Lucas Aquino Guedes |
+| Otavio Henrique Barbosa Soares |
+| Bruno Maia Santos |
+| Luna Beatriz Alves |
+| Kaio Alves Gonzaga Silva |
+ 
+---
+ 
+
+  Desenvolvido com foco em sustentabilidade e economia circular para o setor gráfico
+
