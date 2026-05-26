@@ -188,7 +188,7 @@ A API expõe **5 controllers** com operações CRUD completas. A documentação 
 |---|---|---|
 | GET | `/api/PontosColeta` | Lista todos os pontos cadastrados no Firebase |
 | GET | `/api/PontosColeta/{id}` | Obtém ponto por ID |
-| GET | `/api/PontosColeta/google?cidade=...` | Busca pontos via Google Maps Places API e salva no Firebase |
+| POST | `/api/PontosColeta/google?cidade=...` | Cadastra pontos via Google Maps Places API e salva no Firebase |
 | POST | `/api/PontosColeta` | Cadastra novo ponto de coleta |
 | PUT | `/api/PontosColeta/{id}` | Atualiza ponto existente |
 | DELETE | `/api/PontosColeta/{id}` | Remove ponto de coleta |
