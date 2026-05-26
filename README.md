@@ -21,7 +21,6 @@
 - [Estrutura do Repositório](#estrutura-do-repositório)
 - [API REST — Endpoints](#api-rest--endpoints)
 - [Modelos de Dados](#modelos-de-dados)
-- [Frontend Desktop (WPF)](#frontend-desktop-wpf)
 - [Integrações Externas](#integrações-externas)
 - [Como Executar](#como-executar)
 - [Documentação](#documentação)
@@ -346,8 +345,7 @@ A janela principal (`MainWindow`) possui uma barra lateral de navegação com 5 
 |---|---|---|
 | Dashboard | Em desenvolvimento | Painel com visão geral do sistema |
 | Cadastrar Resíduos | Em desenvolvimento | Formulário de cadastro de resíduos |
-| Pontos de Coleta | Em desenvolvimento | Lista de pontos cadastrados |
-| Mapa | Funcional | Mapa interativo com busca por cidade |
+| Mapa/Ponto de Coleta | Funcional | Mapa interativo com busca por cidade |
 | Relatórios | Em desenvolvimento | Geração de relatórios |
 
 ## Integrações Externas
