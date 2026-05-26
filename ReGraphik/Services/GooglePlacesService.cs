@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json; // Biblioteca nativa do .NET (C# básico)
+using System.Text.Json; 
 using System.Threading.Tasks;
-using ApiRestReGraphik.Models; // Ajustado para o Namespace correto do seu projeto!
+using ApiRestReGraphik.Models; 
 
 namespace ReGraphik.Services
 {
