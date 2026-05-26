@@ -108,3 +108,62 @@ Cliente WPF  →  API REST (ASP.NET Core)  →  Firebase Realtime Database
 | CORS | Aberto para qualquer origem (configurável para produção) |
  
 ---
+
+## Estrutura do Repositório
+ 
+```
+ReGraphikApp/
+├── ApiRestReGraphik/
+│   ├── Controllers/
+│   │   ├── UsuarioController.cs
+│   │   ├── ResiduoController.cs
+│   │   ├── PontosColetaController.cs
+│   │   ├── SugestaoController.cs
+│   │   └── SugestaoResiduosController.cs
+│   ├── Services/
+│   │   ├── UsuarioService.cs
+│   │   ├── ResiduoService.cs
+│   │   ├── PontosColetaService.cs
+│   │   ├── SugestaoService.cs
+│   │   └── SugestaoResiduosService.cs
+│   ├── Models/
+│   │   ├── Usuario.cs
+│   │   ├── Residuo.cs
+│   │   ├── PontosColeta.cs
+│   │   ├── Sugestao.cs
+│   │   └── SugestaoResiduo.cs
+│   ├── Data/
+│   │   └── DbReGraphik.cs
+│   ├── Program.cs
+│   ├── appsettings.json
+│   └── appsettings.Development.json
+│
+├── ReGraphik/
+│   ├── Views/
+│   │   ├── MainWindow.xaml
+│   │   └── Pages/
+│   │       ├── DashboardPage.xaml
+│   │       ├── ResiduosPage.xaml
+│   │       ├── PontosColetaPage.xaml
+│   │       ├── MapaPage.xaml
+│   │       └── RelatoriosPage.xaml
+│   ├── ViewModels/
+│   │   ├── BaseViewModel.cs
+│   │   └── ResiduoViewModel.cs
+│   ├── Models/
+│   ├── Services/
+│   │   └── GooglePlacesService.cs
+│   └── Commands/
+│       └── RelayCommand.cs
+│
+├── Modelagem/
+│   ├── MiniMundo Demanda.pdf
+│   ├── Modelo Conceitual.pdf
+│   ├── Modelo Lógico.pdf
+│   └── Modelo Físico.pdf
+│
+└── Banco de Dados/
+    └── Documentação Criação Modelagem.pdf
+```
+ 
+---
