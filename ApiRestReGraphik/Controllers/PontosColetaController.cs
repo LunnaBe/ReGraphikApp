@@ -67,6 +67,15 @@ namespace ApiRestReGraphik.Controllers
         /// <summary>
         /// POST api/PontosColeta/sincronizar?cidade=... - Busca os dados no Google e grava direto no Firebase.
         /// </summary>
+        /// 
+        /// <remarks>Responsável por buscar os dados no Google e gravar direto no Firebase. 
+        /// Observação:Retorna um status 200 OK com uma mensagem de sucesso ou um status 400 Bad Request se o parâmetro 'cidade' for inválido ou um status 
+        /// 500 Internal Server Error em caso de falha.</remarks>
+        /// 
+        /// <response code="200">Sincronização concluída com sucesso.</response>
+        /// <response code="400">Parâmetro 'cidade' inválido ou ausente.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
         [HttpPost("sincronizar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
