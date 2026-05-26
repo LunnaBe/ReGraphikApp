@@ -422,6 +422,50 @@ dotnet run
 3. Certifique-se que a API está em execução
 4. Pressione `F5` para rodar
 ---
+## Arquitetura do Projeto (MVVM)
+
+Este projeto foi desenvolvido utilizando o padrão **Model-View-ViewModel (MVVM)**, garantindo a separação clara entre a interface do usuário, a lógica de apresentação e as regras de negócio/dados. 
+
+Abaixo está o fluxo de comunicação entre as camadas da nossa aplicação:
+
+```mermaid
+flowchart LR
+    classDef view fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
+    classDef vm fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef model fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+
+    subgraph View ["📱 View (XAML)"]
+        UI["Páginas e Controles UI\n(ex: ResiduosPage.xaml)"]:::view
+    end
+
+    subgraph ViewModel ["🧠 ViewModel (C#)"]
+        CMD["RelayCommand\n(Ações)"]:::vm
+        VM["ViewModel\n(ex: ResiduoViewModel)"]:::vm
+        BVM["BaseViewModel\n(INotifyPropertyChanged)"]:::vm
+        
+        CMD --> VM
+        VM --> BVM
+    end
+
+    subgraph Model ["💾 Model & Services (C#)"]
+        SVC["Services\n(ex: GooglePlacesService)"]:::model
+        MOD["Models\n(ex: Residuo, Pontos)"]:::model
+        
+        SVC --> MOD
+    end
+
+    UI -- "1. Interação" --> CMD
+    VM -- "2. Solicita Dados" --> SVC
+    MOD -- "3. Alimenta Dados" --> VM
+    BVM -. "4. Atualiza XAML" .-> UI
+```
+
+### Como funciona o fluxo?
+
+1. **Ação do Usuário:** O usuário interage com a **View** (ex: clica num botão em `ResiduosPage.xaml`). Essa ação aciona um `RelayCommand`.
+2. **Processamento:** O comando avisa a **ViewModel** correspondente (`ResiduoViewModel`), que processa a lógica de tela.
+3. **Busca de Dados:** Se necessário, a ViewModel chama um **Service** (como o `GooglePlacesService`), que consome APIs externas ou banco de dados, retornando objetos do tipo **Model** (`Residuo`, `PontosColeta`).
+4. **Atualização Reativa:** A ViewModel atualiza suas propriedades. Através da `BaseViewModel` (que implementa `INotifyPropertyChanged`), o XAML é notificado e atualiza a tela automaticamente via *Data Binding*.
 ## Documentação
  
 A estrutura de dados e o planejamento técnico completo estão disponíveis nas pastas do repositório:
