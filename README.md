@@ -167,3 +167,17 @@ ReGraphikApp/
 ```
  
 ---
+
+## API REST — Endpoints
+ 
+A API expõe **5 controllers** com operações CRUD completas. A documentação interativa fica disponível via **Swagger** na raiz da aplicação ao rodar o projeto.
+ 
+### Usuário — `api/Usuario`
+ 
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/api/Usuario` | Lista todos os usuários |
+| GET | `/api/Usuario/{id}` | Obtém usuário por ID |
+| POST | `/api/Usuario` | Cria novo usuário |
+| PUT | `/api/Usuario/{id}` | Atualiza usuário existente |
+| DELETE | `/api/Usuario/{id}` | Remove usuário |
