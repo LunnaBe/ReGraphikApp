@@ -38,7 +38,7 @@ namespace ReGraphik.Views.Pages
 
             try
             {
-                // 1. Envia a requisição POST para a API fazer a sincronização direto no Firebase
+                /// 1. Envia a requisição POST para a API fazer a sincronização direto no Firebase
                 string urlSincronizar = $"https://webregraphik.runasp.net/api/PontosColeta/sincronizar?cidade={Uri.EscapeDataString(cidade)}";
                 var conteudoVazio = new StringContent("", System.Text.Encoding.UTF8, "application/json");
 
@@ -46,32 +46,32 @@ namespace ReGraphik.Views.Pages
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // 2. Se a sincronização deu certo, chamamos a função para trazer os dados atualizados para a tela
+                    /// 2. Se a sincronização deu certo, chamamos a função para trazer os dados atualizados para a tela
                     MessageBox.Show($"Sincronização de '{cidade}' concluída com sucesso com os dados do Google!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Busca os pontos atualizados para renderizar no mapa do Leaflet
+                    /// Busca os pontos atualizados para renderizar no mapa do Leaflet
                     var pontosSalvos = await BuscarPontosDoBancoAsync();
 
-                    // Filtra na tela para exibir apenas os pontos da cidade buscada
+                    /// Filtra na tela para exibir apenas os pontos da cidade buscada
                     _pontosAtuais = pontosSalvos
                         .Where(p => p.Cidade != null && p.Cidade.Contains(cidade, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
-                    // Atualiza o dicionário de coordenadas da tela
+                    /// Atualiza o dicionário de coordenadas da tela
                     _latLngs.Clear();
                     for (int i = 0; i < _pontosAtuais.Count; i++)
                     {
                         _latLngs[i] = (_pontosAtuais[i].Lat, _pontosAtuais[i].Lng);
                     }
 
-                    // Atualiza a ListView lateral com os pontos encontrados
+                    /// Atualiza a ListView lateral com os pontos encontrados
                     ListaPontos.ItemsSource = null;
                     ListaPontos.ItemsSource = _pontosAtuais;
 
-                    // Esconde o placeholder do mapa enquanto carrega os dados
+                    /// Esconde o placeholder do mapa enquanto carrega os dados
                     EstadoVazio.Visibility = Visibility.Collapsed;
 
-                    // Alimenta o componente visual do mapa
+                    /// Alimenta o componente visual do mapa
                     CarregarMapa(_pontosAtuais);
                 }
                 else

@@ -241,7 +241,7 @@
                         <DataGridTemplateColumn Header="Ações" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="💡 Sugestões" Click="BtnSugestoes_Click" Height="28" Padding="8,0"
+                                    <Button Content="💡 Sugestões" Command="{Binding SugestaoCommand}"  Height="28" Padding="8,0"
                                             Background="White" BorderBrush="#2563EB" BorderThickness="1" Foreground="#2563EB" FontSize="12">
                                         <Button.Resources>
                                             <Style TargetType="Border">
