@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using ReGraphik.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ReGraphik.Models 
 {
@@ -8,7 +10,14 @@ namespace ReGraphik.Models
         public string Id { get; set; }
 
         [JsonPropertyName("id_usuario")]
+        [ForeignKey("Usuario")]
         public string IdUsuario { get; set; }
+
+        /// <summary>
+        /// Propriedade de navegação para o usuário associado
+        /// </summary>
+        [JsonIgnore]
+        public virtual Usuario Usuario { get; set; }
 
         [JsonPropertyName("tipo_residuo")]
         public string TipoResiduo { get; set; }

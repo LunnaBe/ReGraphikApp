@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ApiRestReGraphik.Models
 {
@@ -8,7 +9,14 @@ namespace ApiRestReGraphik.Models
         public string Id { get; set; }
 
         [JsonPropertyName("id_usuario")]
+        [ForeignKey("Usuario")]
         public string IdUsuario { get; set; }
+
+        /// <summary>
+        /// Propriedade de navegação para o usuário associado
+        /// </summary>
+        [JsonIgnore]
+        public virtual Usuario Usuario { get; set; }
 
         [JsonPropertyName("tipo_residuo")]
         public string TipoResiduo { get; set; }
@@ -20,7 +28,7 @@ namespace ApiRestReGraphik.Models
         public string Especificacao { get; set; }
 
         [JsonPropertyName("projeto")]
-        public string Projeto  { get; set; }
+        public string Projeto { get; set; }
 
         [JsonPropertyName("quantidade")]
         public double Quantidade { get; set; }
@@ -29,7 +37,7 @@ namespace ApiRestReGraphik.Models
         public DateTime DataCadastro { get; set; }
 
         [JsonPropertyName("condicao")]
-        public required string Condicao { get; set; }
+        public string Condicao { get; set; }
 
         [JsonPropertyName("dimensoes_cm")]
         public double? DimensoesCm { get; set; }

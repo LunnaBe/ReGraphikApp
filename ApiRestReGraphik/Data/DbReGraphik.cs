@@ -40,8 +40,7 @@ namespace ApiRestReGraphik.Data
 
             // Configura a URL do Firebase Realtime Database a partir do arquivo de configuração
             DbFirebase = new FirebaseClient(configuration["Firebase:RealtimeDatabaseUrl"]);
+
         }
-
-
     }
 }
