@@ -42,7 +42,7 @@ namespace ReGraphik.ViewModels
             var json = JsonSerializer.Serialize(new { Login, Senha });
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await http.PostAsync("http://localhost:5000/api/usuario/login", content);
+            var response = await http.PostAsync("https://webregraphik.runasp.net/api/usuario/login", content);
 
             if (response.IsSuccessStatusCode)
             {

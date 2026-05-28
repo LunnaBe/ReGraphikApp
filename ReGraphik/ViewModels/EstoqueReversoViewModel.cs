@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ReGraphik.Models;
 
 namespace ReGraphik.ViewModels
 {
@@ -28,10 +29,10 @@ namespace ReGraphik.ViewModels
 
         public EstoqueReversoViewModel()
         {
-            // Inicializa o comando de sugestão com a função que será executada ao clicar no botão
+            // Inicializa o comando de sugestão com a função que será executada ao clicar no botão.
             SugestaoCommand = new RelayCommand(TelaSugestao);
 
-            // Carrega os dados do estoque reverso do banco assim que a ViewModel for criada
+            // Carrega os dados do estoque reverso do banco assim que a ViewModel for criada . 
             _ = CarregarEstoqueDoBancoAsync();
         }
 

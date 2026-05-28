@@ -60,23 +60,28 @@ namespace ReGraphik.ViewModels
 
             var usuario = new
             {
-                Nome,
-                CPF,
-                Email,
-                Login,
-                Senha,
-                DataCadastro = DateTime.Now
+                id = Guid.NewGuid().ToString(),
+                name = Nome,
+                cpf = CPF,
+                email = Email,
+                login = Login,
+                senha = Senha,
+                perfil = "",
+                data_cadastro = DateTime.Now
             };
 
             var json = JsonSerializer.Serialize(usuario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await http.PostAsync("http://localhost:5000/api/usuario", content);
+            var response = await http.PostAsync("https://webregraphik.runasp.net/api/usuario", content);
 
             if (response.IsSuccessStatusCode)
                 MessageBox.Show("Cadastro realizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             else
-                MessageBox.Show("Erro ao cadastrar. Verifique os dados e tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            {
+                var erro = await response.Content.ReadAsStringAsync();
+                MessageBox.Show($"Erro: {response.StatusCode}\n{erro}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
