@@ -147,5 +147,15 @@ namespace ApiRestReGraphik.Services
                 throw new Exception("Erro ao excluir o usuário");
             }
         }
+        public async Task<Usuario?> Autenticar(string login, string senha)
+        {
+            var usuarios = await _firebaseClient
+                .Child(NodeName)
+                .OnceAsync<Usuario>();
+
+            return usuarios
+                .Select(r => r.Object)
+                .FirstOrDefault(u => u.Login == login && u.Senha == senha);
+        }
     }
 }

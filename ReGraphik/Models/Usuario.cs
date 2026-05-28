@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ApiRestReGraphik.Models
+namespace ReGraphik.Models
 {
     public class Usuario
     {

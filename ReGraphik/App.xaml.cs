@@ -26,6 +26,9 @@ namespace ReGraphik
                 0,
                 Microsoft.Win32.RegistryValueKind.DWord);
             
+            LoginWindow loginTela = new LoginWindow();
+            loginTela.Show();
+            
             
            
         }

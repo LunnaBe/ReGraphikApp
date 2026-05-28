@@ -1,37 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ReGraphik.Commands
 {
     internal class RelayCommand : ICommand
     {
-        private readonly Action execute;
-        private readonly Func<bool> canExecute;
+        private readonly Action<object?> _executar;
+        private readonly Func<object?, bool>? _podeExecutar;
 
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        // Construtor para métodos COM parâmetro: new RelayCommand(async _ => await Metodo())
+        public RelayCommand(Action<object?> executar, Func<object?, bool>? podeExecutar = null)
         {
-            this.execute = execute;
-            this.canExecute = canExecute;
+            _executar = executar;
+            _podeExecutar = podeExecutar;
         }
 
-        public void Execute(object parameter)
+        // Construtor para métodos SEM parâmetro: new RelayCommand(Metodo)
+        public RelayCommand(Action executar, Func<bool>? podeExecutar = null)
         {
-            execute();
+            _executar = _ => executar();
+            _podeExecutar = podeExecutar == null ? null : _ => podeExecutar();
         }
 
-        public bool CanExecute(object parameter)
-        {
-            return canExecute == null || canExecute();
-        }
+        public bool CanExecute(object? parameter) => _podeExecutar == null || _podeExecutar(parameter);
 
-        public event EventHandler CanExecuteChanged
+        public void Execute(object? parameter) => _executar(parameter);
+
+        public event EventHandler? CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
     }
 }
