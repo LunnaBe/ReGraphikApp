@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReGraphik.ViewModels
 {
-    public class UsuarioViewModel : BaseViewModel
+    public class RelatorioViewModel : BaseViewModel
     {
     }
 }

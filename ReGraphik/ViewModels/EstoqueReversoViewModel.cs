@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace ReGraphik.ViewModels
 {
-    class EstoqueReversoViewModel
+    public class EstoqueReversoViewModel : BaseViewModel
     {
         // Instancia única do HttpClient para toda a classe, seguindo as melhores práticas
         private readonly HttpClient _http = new();

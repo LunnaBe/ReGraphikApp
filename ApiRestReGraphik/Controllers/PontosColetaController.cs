@@ -89,10 +89,10 @@ namespace ApiRestReGraphik.Controllers
 
             try
             {
-                /// Carrega os pontos de coleta já existentes no banco para evitar duplicidades
+                // Carrega os pontos de coleta já existentes no banco para evitar duplicidades
                 var pontosNoBanco = (await _pontosColetaService.Listar())?.ToList() ?? new List<PontosColeta>();
 
-                /// Monta a URL da API do Google Maps usando o nome da cidade e a chave de API do appsettings.json
+                // Monta a URL da API do Google Maps usando o nome da cidade e a chave de API do appsettings.json
                 var apiKey = _configuration["GoogleMaps:ApiKey"];
                 var query = Uri.EscapeDataString($"ponto de coleta reciclagem {cidade}");
                 var url = $"https://maps.googleapis.com/maps/api/place/textsearch/json?query={query}&key={apiKey}";
@@ -103,7 +103,7 @@ namespace ApiRestReGraphik.Controllers
                 }
 
                 var json = await _httpClient.GetStringAsync(url);
-                /// Faz o parsing do JSON usando System.Text.Json
+                // Faz o parsing do JSON usando System.Text.Json
                 using var doc = System.Text.Json.JsonDocument.Parse(json);
 
                 if (!doc.RootElement.TryGetProperty("results", out var results))
@@ -126,7 +126,7 @@ namespace ApiRestReGraphik.Controllers
                         lng = loc.TryGetProperty("lng", out var ln) ? ln.GetDouble() : 0;
                     }
 
-                    /// Verifica se já existe um ponto com as mesmas coordenadas (lat, lng)
+                    // Verifica se já existe um ponto com as mesmas coordenadas (lat, lng)
                     bool jaExiste = pontosNoBanco.Any(p => p.Lat == lat && p.Lng == lng);
                     if (jaExiste)
                     {
@@ -134,10 +134,10 @@ namespace ApiRestReGraphik.Controllers
                         continue;
                     }
 
-                    /// Cria o objeto modelo
+                    // Cria o objeto modelo
                     var novoPonto = new PontosColeta
                     {
-                        Id = Guid.NewGuid().ToString(), /// ID gerado na API para não ficar null
+                        Id = Guid.NewGuid().ToString(), // ID gerado na API para não ficar null
                         NomePonto = nome,
                         Cidade = cidade,
                         Estado = "BR",
@@ -147,10 +147,10 @@ namespace ApiRestReGraphik.Controllers
                         Lng = lng
                     };
 
-                    /// Envia diretamente para o Firebase
+                    // Envia diretamente para o Firebase
                     await _pontosColetaService.Criar(novoPonto);
 
-                    /// Adiciona na lista local para o caso do Google mandar dois itens iguais na mesma resposta
+                    // Adiciona na lista local para o caso do Google mandar dois itens iguais na mesma resposta
                     pontosNoBanco.Add(novoPonto);
                     totalSalvo++;
                 }

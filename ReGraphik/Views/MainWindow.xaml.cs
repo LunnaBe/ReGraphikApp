@@ -14,15 +14,12 @@ namespace ReGraphik.Views
         {
             InitializeComponent();
             
-            /// Inicializa a aplicação abrindo a Dashboard por padrão
+            // Inicializa a aplicação abrindo a Dashboard por padrão
             MainFrame.Navigate(new DashboardPage());
             _btnAtivo = BtnDashboard;
         }
 
-        /// <summary>
-        /// Altera visualmente o botão selecionado no menu lateral
-        /// </summary>
-        /// <param name="btn"></param>
+        // Altera visualmente o botão selecionado no menu lateral
         private void SetarNavAtivo(Button btn)
         {
             if (_btnAtivo != null)
