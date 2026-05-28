@@ -24,6 +24,8 @@ namespace ReGraphik.ViewModels
         // Comando para acionar a função de sugestão, que pode ser vinculada a um botão na interface
         public ICommand SugestaoCommand { get; set; }
 
+
+
         public EstoqueReversoViewModel()
         {
             // Inicializa o comando de sugestão com a função que será executada ao clicar no botão

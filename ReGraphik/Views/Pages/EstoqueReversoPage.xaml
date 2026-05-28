@@ -145,7 +145,7 @@
                     </StackPanel>
                 </Grid>
 
-                <DataGrid x:Name="DgEstoque" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" 
+                <DataGrid ItemsSource="{Binding ListaResiduos}" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" 
                           Background="White" BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
                           RowHeight="48" IsReadOnly="True" HeadersVisibility="Column">
 
