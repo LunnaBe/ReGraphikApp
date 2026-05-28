@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ApiRestReGraphik.Models
+namespace ReGraphik.Models 
 {
-    public class Residuo
+    public class Residuo 
     {
         [JsonPropertyName("id")]
         public string Id { get; set; }

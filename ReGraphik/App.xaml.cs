@@ -10,6 +10,8 @@ namespace ReGraphik
         {
             base.OnStartup(e);
 
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
+
             var appName = System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe";
 
             // Força IE 11 no WebBrowser (necessário para Leaflet.js)

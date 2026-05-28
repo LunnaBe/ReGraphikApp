@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ReGraphik.Models; // Certifique-se de que a classe Residuo está acessível no WPF
+using ReGraphik.Models; 
 
 namespace ReGraphik.ViewModels
 {
