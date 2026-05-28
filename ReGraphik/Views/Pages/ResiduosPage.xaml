@@ -134,7 +134,7 @@
                             <TextBlock Text="Condição" Style="{StaticResource FieldLabelStyle}"/>
                             <ComboBox x:Name="CboCondicao" Style="{StaticResource InputControlStyle}" SelectedIndex="0" SelectionChanged="CboCondicao_SelectionChanged">
                                 <ComboBoxItem Content="Selecione o tipo de condição" Foreground="#94A3B8" IsEnabled="False"/>
-                                <ComboBoxItem Content="Ótima (como novo)"/>
+                                <ComboBoxItem Content="Ótima"/>
                                 <ComboBoxItem Content="Regular / Usado"/>
                                 <ComboBoxItem Content="Danificado"/>
                             </ComboBox>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ReGraphik.ViewModels;
+using System.Windows;
 
 namespace ReGraphik.Views.Pages
 {
@@ -7,6 +8,7 @@ namespace ReGraphik.Views.Pages
         public LoginWindow()
         {
             InitializeComponent();
+            DataContext = new LoginViewModel();
         }
     }
 }
