@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using ReGraphik.Views.Pages;
@@ -9,17 +7,17 @@ namespace ReGraphik.Views
     public partial class MainWindow : Window
     {
         private Button? _btnAtivo;
+        private string _nomeUsuario = "Usuário";
 
-        public MainWindow()
+        public MainWindow(string nomeUsuario = "Usuário")
         {
             InitializeComponent();
-            
-            // Inicializa a aplicação abrindo a Dashboard por padrão
-            MainFrame.Navigate(new DashboardPage());
+            _nomeUsuario = nomeUsuario;
+            TxtNomeUsuario.Text = nomeUsuario;
+            MainFrame.Navigate(new DashboardPage(nomeUsuario));
             _btnAtivo = BtnDashboard;
         }
 
-        // Altera visualmente o botão selecionado no menu lateral
         private void SetarNavAtivo(Button btn)
         {
             if (_btnAtivo != null)
@@ -32,7 +30,7 @@ namespace ReGraphik.Views
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
             SetarNavAtivo(BtnDashboard);
-            MainFrame.Navigate(new DashboardPage());
+            MainFrame.Navigate(new DashboardPage(_nomeUsuario));
         }
 
         private void Residuos_Click(object sender, RoutedEventArgs e)

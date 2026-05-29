@@ -116,7 +116,7 @@
             </Grid>
         </Border>
 
-        <!-- Tabele de residuos -->
+        <!-- Tabela de residuos -->
         <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="20">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2" BlurRadius="12" Opacity="0.04" Color="#000"/>
@@ -149,25 +149,26 @@
 
                 <DataGrid ItemsSource="{Binding ListaResiduos}" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" 
                           Background="White" BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
-                          RowHeight="48" IsReadOnly="True" HeadersVisibility="Column">
-                    
+                          RowHeight="48" IsReadOnly="True" HeadersVisibility="Column"
+                          x:Name="GridResiduos">
+
                     <!-- Visual do item -->
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Style.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#1E293B" />
-                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#1E293B"/>
-                        </Style.Resources>
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Foreground" Value="#1E293B"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#1E293B" />
+                                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#1E293B"/>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
                     </DataGrid.CellStyle>
 
                     <!-- Visual Cabeçalho -->
@@ -192,8 +193,8 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
-                    
-                    <!-- Estilo da coluna -->
+
+                    <!-- Colunas -->
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="70">
                             <DataGridTextColumn.ElementStyle>
@@ -261,11 +262,23 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Ações" Width="120">
+                        <!-- ── Coluna de Ações: botão "💡 Sugestões" com CommandParameter ── -->
+                        <DataGridTemplateColumn Header="Ações" Width="130">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="💡 Sugestões" Command="{Binding SugestaoCommand}"  Height="28" Padding="8,0"
-                                            Background="White" BorderBrush="#2563EB" BorderThickness="1" Foreground="#2563EB" FontSize="12">
+                                    <!--
+                                        CommandParameter="{Binding}" passa o Residuo da linha atual.
+                                        RelativeSource navega até a Page para acessar o DataContext (EstoqueReversoViewModel).
+                                    -->
+                                    <Button Content="💡 Sugestões"
+                                            Command="{Binding DataContext.SugestaoCommand,
+                                                      RelativeSource={RelativeSource AncestorType=Page}}"
+                                            CommandParameter="{Binding}"
+                                            Height="28" Padding="8,0"
+                                            Background="White"
+                                            BorderBrush="#2563EB" BorderThickness="1"
+                                            Foreground="#2563EB" FontSize="12"
+                                            Cursor="Hand">
                                         <Button.Resources>
                                             <Style TargetType="Border">
                                                 <Setter Property="CornerRadius" Value="4"/>

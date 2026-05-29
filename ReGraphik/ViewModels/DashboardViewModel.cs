@@ -7,7 +7,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using ReGraphik.Models; 
 using ApiRestReGraphik.Models;
-using ReGraphik.Models; // Certifique-se de que a classe Residuo está acessível no WPF
+using ReGraphik.Models;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace ReGraphik.ViewModels
 {
@@ -56,62 +58,89 @@ namespace ReGraphik.ViewModels
             set { _ultimosResiduos = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Propriedades para os Gráficos
+        /// </summary>
+        private SeriesCollection _graficoStatus;
+        public SeriesCollection GraficoStatus
+        {
+            get => _graficoStatus;
+            set { _graficoStatus = value; OnPropertyChanged(); }
+        }
+
+        private SeriesCollection _graficoTipos;
+        public SeriesCollection GraficoTipos
+        {
+            get => _graficoTipos;
+            set { _graficoTipos = value; OnPropertyChanged(); }
+        }
+
+        private string[] _labelsTipos;
+        public string[] LabelsTipos
+        {
+            get => _labelsTipos;
+            set { _labelsTipos = value; OnPropertyChanged(); }
+        }
+
+        public Func<double, string> FormatterTipos { get; set; } = value => value.ToString("N2") + " kg";
+
         /// Construtor
         public DashboardViewModel()
         {
             _httpClient = new HttpClient();
-            // Substitua pela URL da sua API rodando localmente (ex: porta 5001, 7200, etc)
-            _httpClient.BaseAddress = new Uri("https://localhost:7001/api/");
+
+            // AJUSTE FEITO AQUI: URL aponta apenas para a raiz da API
+            _httpClient.BaseAddress = new Uri("https://webregraphik.runasp.net/api/");
 
             Task.Run(async () => await CarregarDadosDaApiAsync());
         }
 
         /// Método para buscar da API e fazer cálculos
-        
         private async Task CarregarDadosDaApiAsync()
         {
             try
             {
-                /// Faz a requisição GET para o endpoint de residuos da API
+                // Faz a requisição GET para o endpoint de Residuos
+                // Como o BaseAddress é ".../api/", ele vai chamar ".../api/Residuo"
                 HttpResponseMessage response = await _httpClient.GetAsync("Residuo");
 
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonResult = await response.Content.ReadAsStringAsync();
 
-                    /// Converte o JSON vindo da API para uma lista C#
                     var opcoes = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     List<Residuo> todosResiduos = JsonSerializer.Deserialize<List<Residuo>>(jsonResult, opcoes);
 
                     if (todosResiduos != null && todosResiduos.Any())
                     {
-                        /// Atualiza as propriedades na Thread da UI
                         App.Current.Dispatcher.Invoke(() =>
                         {
-                           
                             ResiduosDb = todosResiduos.Count;
-
-                            // Quantidade de reaproveitados (Ajuste a string "Reaproveitado" conforme salvo no Firebase)
                             Reaproveitar = todosResiduos.Count(r => r.Status == "Reaproveitado");
-
-                            // Quantidade em estoque (Ajuste a string "Em Estoque" conforme salvo no Firebase)
                             Estoque = todosResiduos.Count(r => r.Status == "Em Estoque");
 
-                            // Cálculo do Total Econômico
-                            // Como o modelo não possui valor financeiro, estou multiplicando a Quantidade por um valor fictício (ex: R$ 5,50/kg)
                             double valorCalculado = todosResiduos.Sum(r => r.Quantidade * 5.50);
-                            Total = valorCalculado.ToString("C2"); // Formata para R$
+                            Total = valorCalculado.ToString("C2");
 
-                            /// Pega os últimos 5 resíduos ordenados pela data mais recente
                             var ultimos = todosResiduos.OrderByDescending(r => r.DataCadastro).Take(5);
                             UltimosResiduos = new ObservableCollection<Residuo>(ultimos);
                         });
                     }
+                    else
+                    {
+                        System.Windows.MessageBox.Show("A API conectou, mas a lista de resíduos veio vazia.", "Aviso");
+                    }
+                }
+                else
+                {
+                    // Se a API retornar erro (ex: 404 Not Found, 500 Internal Server Error)
+                    System.Windows.MessageBox.Show($"A API retornou um erro: {response.StatusCode}", "Erro HTTP");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao carregar dados: {ex.Message}");
+                // Se o WPF não conseguir nem achar a API (ex: porta errada, API desligada)
+                System.Windows.MessageBox.Show($"Falha de conexão: {ex.Message}", "Erro de Código");
             }
         }
     }

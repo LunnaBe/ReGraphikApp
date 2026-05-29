@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       mc:Ignorable="d"  
       d:DesignHeight="700" d:DesignWidth="950"
       Background="#F3F4F6" Title="Dashboard">
@@ -27,7 +28,7 @@
     </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid >
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -36,7 +37,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Cabeçalho do Usuário -->
             <Border Grid.Row="0" 
                     Background="White" 
                     CornerRadius="12"
@@ -63,7 +63,8 @@
                         </Border>
 
                         <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
-                            <TextBlock Text="Usuário" 
+                            <TextBlock x:Name= "TxtNomeUsuario"
+                                       Text="Usuário" 
                                        FontSize="20"
                                        FontWeight="Bold" 
                                        Foreground="#1E293B"/>
@@ -76,7 +77,6 @@
                 </Grid>
             </Border>
 
-            <!-- Titulo -->
             <TextBlock Grid.Row="1" 
                        Text="Dashboard" 
                        FontSize="24" 
@@ -84,7 +84,6 @@
                        Foreground="#1E293B" 
                        Margin="0,0,0,16"/>
 
-            <!-- Cards Dashboard -->
             <StackPanel Grid.Row="2" 
                         Orientation="Horizontal" 
                         Margin="0,0,0,24">
@@ -130,31 +129,52 @@
                 </Border>
             </StackPanel>
 
-            <!-- Gráficos Dashboard -->
             <StackPanel Grid.Row="3" 
                         Orientation="Horizontal"
                         Margin="0,0,0,24">
 
-                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,20,0" Height="250" Width="436">
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,20,0" Height="280" Width="436">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="1" BlurRadius="8" Opacity="0.08" Color="#000"/>
                     </Border.Effect>
-                    <StackPanel VerticalAlignment="Top">
-                        <TextBlock Text="Residuos Reaproveitados" FontSize="16" FontWeight="Bold" Foreground="#1E293B" TextAlignment="Left"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Residuos Reaproveitados" FontSize="16" FontWeight="Bold" Foreground="#1E293B" TextAlignment="Left" Margin="0,0,0,12"/>
+
+                        <lvc:PieChart Grid.Row="1" Series="{Binding GraficoStatus}" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}"/>
+                    </Grid>
                 </Border>
 
-                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,0" Height="250" Width="436">
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,0" Height="280" Width="436">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="1" BlurRadius="8" Opacity="0.08" Color="#000"/>
                     </Border.Effect>
-                    <StackPanel VerticalAlignment="Top">
-                        <TextBlock Text="Tipo de Resíduos" FontSize="16" FontWeight="Bold" Foreground="#1E293B" TextAlignment="Center"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Tipo de Resíduos" FontSize="16" FontWeight="Bold" Foreground="#1E293B" TextAlignment="Left" Margin="0,0,0,12"/>
+
+                        <lvc:CartesianChart Grid.Row="1" Series="{Binding GraficoTipos}">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Labels="{Binding LabelsTipos}">
+                                    <lvc:Axis.Separator>
+                                        <lvc:Separator Step="1" IsEnabled="False" />
+                                    </lvc:Axis.Separator>
+                                </lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis Title="Kg" LabelFormatter="{Binding FormatterTipos}" />
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                    </Grid>
                 </Border>
             </StackPanel>
 
-            <!-- Tabela de cadastrados -->
             <Border Grid.Row="4" 
                     Background="White" 
                     CornerRadius="12" 
@@ -178,7 +198,7 @@
                                Margin="0,0,0,12" 
                                TextAlignment="Left"/>
 
-                    <Button Content="Verificar" Width="140" Height="36" Background="#3274ba" BorderThickness="0" 
+                    <Button Content="Verificar" Command="{Binding AtualizarDadosCommand}" Width="140" Height="36" Background="#3274ba" BorderThickness="0" 
                             Foreground="White" FontWeight="Medium" HorizontalAlignment="Right">
                         <Button.Resources>
                             <Style TargetType="Border">

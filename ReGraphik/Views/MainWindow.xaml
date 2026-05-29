@@ -10,6 +10,8 @@
     MinWidth="960"
     WindowStartupLocation="CenterScreen"
     Background="#F3F4F6">
+    
+    
 
     <Window.Resources>
         <Style x:Key="NavBtn" TargetType="Button">
@@ -70,6 +72,12 @@
                         <Run Text="ReGraphik"/>
                     </TextBlock.Inlines>
                 </TextBlock>
+                <TextBlock x:Name="TxtNomeUsuario"
+                           Grid.Row="0"
+                           Foreground="#BFDBFE"
+                           FontSize="13"
+                           Margin="20,70,20,20"
+                           Text="Usuário"/>
 
                 <StackPanel Grid.Row="1">
                     <Button x:Name="BtnDashboard"

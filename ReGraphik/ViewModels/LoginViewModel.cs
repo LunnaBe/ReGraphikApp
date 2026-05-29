@@ -8,6 +8,7 @@ using System.Windows.Input;
 using ReGraphik.Commands;
 using ReGraphik.Views.Pages;
 using ReGraphik.Views;
+using ReGraphik.Models;
 
 namespace ReGraphik.ViewModels
 {
@@ -46,7 +47,10 @@ namespace ReGraphik.ViewModels
 
             if (response.IsSuccessStatusCode)
             {
-                new MainWindow().Show();
+                var jsonResposta = await response.Content.ReadAsStringAsync();
+                var usuario = JsonSerializer.Deserialize<Usuario>(jsonResposta, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                new MainWindow(usuario?.Nome ?? "Usuário").Show();
                 foreach (Window w in Application.Current.Windows)
                 {
                     if (w is LoginWindow)
