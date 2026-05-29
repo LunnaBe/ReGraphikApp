@@ -89,10 +89,10 @@ namespace ReGraphik.ViewModels
         {
             _httpClient = new HttpClient();
 
-            // AJUSTE FEITO AQUI: URL aponta apenas para a raiz da API
-            _httpClient.BaseAddress = new Uri("https://webregraphik.runasp.net/api/");
+            _httpClient.BaseAddress = new Uri("https://webregraphik.runasp.net/api/usuario");
 
             Task.Run(async () => await CarregarDadosDaApiAsync());
+
         }
 
         /// Método para buscar da API e fazer cálculos
@@ -100,8 +100,7 @@ namespace ReGraphik.ViewModels
         {
             try
             {
-                // Faz a requisição GET para o endpoint de Residuos
-                // Como o BaseAddress é ".../api/", ele vai chamar ".../api/Residuo"
+                /// Faz a requisição GET para o endpoint de Residuos
                 HttpResponseMessage response = await _httpClient.GetAsync("Residuo");
 
                 if (response.IsSuccessStatusCode)
@@ -133,13 +132,13 @@ namespace ReGraphik.ViewModels
                 }
                 else
                 {
-                    // Se a API retornar erro (ex: 404 Not Found, 500 Internal Server Error)
+                  
                     System.Windows.MessageBox.Show($"A API retornou um erro: {response.StatusCode}", "Erro HTTP");
                 }
             }
             catch (Exception ex)
             {
-                // Se o WPF não conseguir nem achar a API (ex: porta errada, API desligada)
+           
                 System.Windows.MessageBox.Show($"Falha de conexão: {ex.Message}", "Erro de Código");
             }
         }

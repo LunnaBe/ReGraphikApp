@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using ReGraphik.ViewModels; // Adicione isso
+using ReGraphik.ViewModels; 
 
 namespace ReGraphik.Views.Pages
 {
@@ -11,7 +11,6 @@ namespace ReGraphik.Views.Pages
             TxtNomeUsuario.Text = nomeUsuario;
             this.DataContext = new DashboardViewModel();
 
-            this.DataContext = new DashboardViewModel();
         }
     }
 }
