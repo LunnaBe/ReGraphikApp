@@ -1,4 +1,4 @@
-﻿using ApiRestReGraphik.Models;
+﻿using ReGraphik.Models;
 using Microsoft.Win32;
 using ReGraphik.ViewModels;
 using System;
