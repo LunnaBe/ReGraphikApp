@@ -17,7 +17,23 @@ namespace ApiRestReGraphik.Controllers
             _usuarioService = usuarioService;
         }
 
+        /// <summary>
+        ///  GET api/Usuario - Obtém dados do Usuário e retorna uma lista de usuários cadastrados no ReGraphik.
+        /// </summary>
+        /// 
+        /// <remarks>Responsável por listar os dados do Usuário. Retornando uma coleção de objetos detalhando informações técnicas e operacionais de cada usuário, 
+        /// com atributos como ID, Nome, CPF, Email, Login, Senha, Perfil e DataCadastro.
+        /// 
+        /// Observação: Retorna um status 200 OK com os dados do ReGraphik ou um status 500 Internal Server Error em caso de falha.
+        /// </remarks>
+        /// 
+        /// <response code="200">Retorna os dados do ReGraphik.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
             try
@@ -32,7 +48,41 @@ namespace ApiRestReGraphik.Controllers
             }
         }
 
+        /// <summary>
+        /// GET api/Usuario/{id} - Obtém um usuário específico do ReGraphik com base no ID fornecido.
+        /// </summary>
+        /// 
+        /// <remarks>Responsável por obter um usuário específico do ReGraphik com base no ID fornecido. 
+        /// 
+        /// Exemplo de resposta: 
+        /// 
+        /// {
+        ///     "Id": "0d95265b-2757-424e-8ea9-445e8fd2a422",
+        ///     "Nome": "João Silva",
+        ///     "CPF": "123.456.789-00",
+        ///     "Email": "joao.silva@example.com",
+        ///     "Login": "joao.silva",
+        ///     "Senha": "senha123",
+        ///     "Perfil": "Admin",
+        ///     "DataCadastro": "2024-06-01T12:00:00Z"
+        /// }
+        /// 
+        /// Observação: Retorna um status 200 OK com os dados da sugestão, um status 404 Not Found se a sugestão não for encontrada ou 
+        /// um status 500 Internal Server Error em caso de falha.
+        /// 
+        /// </remarks>
+        /// 
+        /// <param name="id">ID do usuário a ser obtido.</param>
+        /// 
+        /// <response code="200">Retorna os dados do usuário solicitado.</response>
+        /// <response code="404">Usuário com o ID fornecido não encontrado.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(string id)
         {
             try
@@ -49,7 +99,38 @@ namespace ApiRestReGraphik.Controllers
             }
         }
 
+
+        /// <summary>
+        /// POST api/Usuario - Criar um novo usuário no ReGraphik.
+        /// </summary>
+        /// 
+        /// <remarks>Responsável por criar um novo usuário no ReGraphik.
+        /// 
+        /// Requisitos de validação:
+        /// - Id: Deve ser um guid gerado automaticamente pelo sistema. (ex: "0d95265b-2757-424e-8ea9-445e8fd2a422")
+        /// - Nome: Deve ser uma string não vazia representando o nome do usuário. (ex: "João Silva")
+        /// - CPF: Deve ser uma string representando o CPF do usuário, seguindo o formato "XXX.XXX.XXX-XX". (ex: "123.456.789-00")
+        /// - Email: Deve ser uma string representando o email do usuário, seguindo um formato de email válido. (ex: "
+        /// - Login: Deve ser uma string representando o login do usuário, seguindo um formato de email válido. (ex: "joao.silva")
+        /// - Senha: Deve ser uma string representando a senha do usuário, com no mínimo 8 caracteres. (ex: "senha123")
+        /// - Perfil: Deve ser uma string representando o perfil do usuário, podendo ser "Admin", "User" ou "Guest". (ex: "Admin")
+        /// - DataCadastro: Deve ser uma data representando a data de cadastro do usuário, gerada automaticamente pelo sistema. (ex: "2024-06-01T12:00:00Z")
+        /// 
+        /// Observação: Retorna um status 201 Created com os dados do usuário criado, um status 400 Bad Request se a requisição for inválida ou
+        /// um status 500 Internal Server Error em caso de falha.
+        /// </remarks>
+        /// 
+        /// <param name="usuario">Objeto do tipo Usuario a ser criado.</param>
+        /// 
+        /// <response code="201">Usuário criado com sucesso.</response>
+        /// <response code="400">Requisição inválida, usuário não fornecido ou dados incorretos.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] Usuario usuario)
         {
             try
@@ -67,7 +148,31 @@ namespace ApiRestReGraphik.Controllers
             }
         }
 
+        /// <summary>
+        /// POST api/Usuario/login - Autenticar um usuário no ReGraphik.
+        /// </summary>
+        /// 
+        /// <remarks>Responsável por autenticar um usuário no ReGraphik.
+        /// 
+        /// Requisitos de validação:
+        /// - Login: Deve ser uma string representando o login do usuário, seguindo um formato de email válido. (ex: "joao.silva")
+        /// - Senha: Deve ser uma string representando a senha do usuário, com no mínimo 8 caracteres. (ex: "senha123")
+        /// 
+        /// Observação: Retorna um status 201 Created com os dados do usuário criado, um status 400 Bad Request se a requisição for inválida ou
+        /// um status 500 Internal Server Error em caso de falha.
+        /// </remarks>
+        /// 
+        /// <param name="request">Objeto do tipo LoginRequest contendo as credenciais do usuário.</param>
+        /// 
+        /// <response code="200">Usuário autenticado com sucesso.</response>
+        /// <response code="401">Login ou senha inválidos.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             try
@@ -86,7 +191,28 @@ namespace ApiRestReGraphik.Controllers
             }
         }
 
+        /// <summary>
+        /// PUT api/Usuario/{id} - Atualizar um usuário existente no ReGraphik com base no ID fornecido.
+        /// </summary>
+        /// 
+        /// <remarks>Responsável por atualizar um usuário existente no ReGraphik com base no ID fornecido.
+        /// Observação: Retorna um status 200 OK com os dados do usuário atualizado, um status 400 Bad Request se a requisição for inválida,
+        /// um status 404 Not Found se o usuário não for encontrado ou um status 500 Internal Server Error em caso de falha.</remarks>
+        /// 
+        /// <param name="id"></param>
+        /// <param name="usuario"></param>
+        /// 
+        /// <response code="200">Usuário atualizado com sucesso.</response>
+        /// <response code="400">Requisição inválida, usuário não fornecido ou dados incorretos.</response>
+        /// <response code="404">Usuário com o ID fornecido não encontrado.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(string id, [FromBody] Usuario usuario)
         {
             try
@@ -108,7 +234,25 @@ namespace ApiRestReGraphik.Controllers
             }
         }
 
+        /// <summary>
+        /// DELETE api/Usuario/{id} - Excluir um usuário do ReGraphik com base no ID fornecido. 
+        /// </summary>
+        /// 
+        /// <remarks>Responsável por excluir um usuário do ReGraphik com base no ID fornecido. 
+        /// Observação: Retorna um status 200 OK se a exclusão for bem-sucedida, um status 404 Not Found se o usuário não for 
+        /// encontrado ou um status 500 Internal Server Error em caso de falha.</remarks>
+        /// 
+        /// <param name="id">ID do usuário a ser excluído.</param>
+        /// 
+        /// <response code="200">Usuário excluído com sucesso.</response>
+        /// <response code="404">Usuário com o ID fornecido não encontrado.</response>
+        /// <response code="500">Ocorreu um erro ao processar a solicitação.</response>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(string id)
         {
             try
