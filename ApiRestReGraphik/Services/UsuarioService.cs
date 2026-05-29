@@ -149,15 +149,32 @@ namespace ApiRestReGraphik.Services
                 throw new Exception("Erro ao excluir o usuário");
             }
         }
+
+        /// <summary>
+        /// Autentica um usuário com base no login e senha fornecidos, utilizando o repositório para acessar os dados e 
+        /// registrando qualquer erro que possa ocorrer durante a operação.
+        /// </summary>
+        /// <param name="login">Login do usuário a ser autenticado.</param>
+        /// <param name="senha">Senha do usuário a ser autenticado.</param>
+        /// <returns>/returns>
         public async Task<Usuario?> Autenticar(string login, string senha)
         {
-            var usuarios = await _firebaseClient
+            try
+            {
+                // Obtém os dados do Firebase para a coleção de usuários
+                var usuarios = await _firebaseClient
                 .Child(NodeName)
                 .OnceAsync<Usuario>();
 
-            return usuarios
-                .Select(r => r.Object)
-                .FirstOrDefault(u => u.Login == login && u.Senha == senha);
+                return usuarios
+                    .Select(r => r.Object)
+                    .FirstOrDefault(u => u.Login == login && u.Senha == senha);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao autenticar o usuário: {ex.Message}");
+                throw new Exception("Erro ao autenticar o usuário");
+            }
         }
     }
 }

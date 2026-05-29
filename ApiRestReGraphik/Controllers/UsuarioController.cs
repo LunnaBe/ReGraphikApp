@@ -11,6 +11,11 @@ namespace ApiRestReGraphik.Controllers
         private readonly UsuarioService _usuarioService;
         private readonly ILogger<UsuarioController> _logger;
 
+        /// <summary>
+        /// Construtor da classe UsuarioController, que recebe um logger e um serviço de Usuario para ser utilizado nas ações do controlador.
+        /// </summary>
+        /// <param name="logger">Logger para registrar informações e erros.</param>
+        /// <param name="usuarioService">Serviço de Usuario para operações relacionadas.</param>
         public UsuarioController(ILogger<UsuarioController> logger, UsuarioService usuarioService)
         {
             _logger = logger;
