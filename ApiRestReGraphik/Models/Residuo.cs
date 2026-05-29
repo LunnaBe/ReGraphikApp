@@ -18,7 +18,6 @@ namespace ApiRestReGraphik.Models
         /// <summary>
         /// Propriedade de navegação para o usuário associado
         /// </summary>
-        [JsonIgnore]
         [ValidateNever]
         public virtual Usuario? Usuario { get; set; }
 

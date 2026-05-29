@@ -66,9 +66,9 @@ namespace ApiRestReGraphik.Controllers
         /// 
         /// {
         ///     "Id": "0d95265b-2757-424e-8ea9-445e8fd2a422",
-        ///     "IdCadastroResiduo": "0d952346b-2757-424e-567B-445e5785",
-        ///     "IdSugestao": "0d95265b-4566-424e-8ea9-445e866735",
-        ///     "DataAplicacao": "2024-06-01T12:00:00Z"
+        ///     "id_cadastro_residuo": "fcf84628-5c2d-4d55-9c59-4aebc59fd318",
+        ///     "id_sugestao": "d02b73ff-9924-4a7f-9a74-f27779515f51",
+        ///     "data_aplicacao": "2026-05-29T18:57:11.912Z"
         /// }
         /// 
         /// Observação: Retorna um status 200 OK com os dados da sugestão, um status 404 Not Found se a sugestão não for encontrada ou 
@@ -139,6 +139,16 @@ namespace ApiRestReGraphik.Controllers
                 if (sugestao == null)
                 {
                     return BadRequest("Sugestão de resíduos inválida.");
+                }
+
+                if (string.IsNullOrEmpty(sugestao.IdCadastroResiduo) || string.IsNullOrEmpty(sugestao.IdSugestao))
+                {
+                    return BadRequest("Os campos 'id_cadastro_residuo' e 'id_sugestao' são obrigatórios.");
+                }
+
+                if (!sugestao.DataAplicacao.HasValue)
+                {
+                    sugestao.DataAplicacao = DateTime.UtcNow;
                 }
 
                 await _sugestaoService.Criar(sugestao);

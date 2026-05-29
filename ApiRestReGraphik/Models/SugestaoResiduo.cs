@@ -10,7 +10,6 @@ namespace ApiRestReGraphik.Models
         [JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonIgnore]
         [JsonPropertyName("id_cadastro_residuo")]
         [ForeignKey("CadastroResiduo")]
         public string? IdCadastroResiduo { get; set; }
@@ -23,7 +22,6 @@ namespace ApiRestReGraphik.Models
         [ValidateNever]
         public virtual Residuo? CadastroResiduo { get; set; }
 
-        [JsonIgnore]
         [JsonPropertyName("id_sugestao")]
         [ForeignKey("Sugestao")]
         public string? IdSugestao { get; set; }
