@@ -58,6 +58,32 @@ namespace ReGraphik.ViewModels
             set { _ultimosResiduos = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Propriedades para os Gráficos
+        /// </summary>
+        private SeriesCollection _graficoStatus;
+        public SeriesCollection GraficoStatus
+        {
+            get => _graficoStatus;
+            set { _graficoStatus = value; OnPropertyChanged(); }
+        }
+
+        private SeriesCollection _graficoTipos;
+        public SeriesCollection GraficoTipos
+        {
+            get => _graficoTipos;
+            set { _graficoTipos = value; OnPropertyChanged(); }
+        }
+
+        private string[] _labelsTipos;
+        public string[] LabelsTipos
+        {
+            get => _labelsTipos;
+            set { _labelsTipos = value; OnPropertyChanged(); }
+        }
+
+        public Func<double, string> FormatterTipos { get; set; } = value => value.ToString("N2") + " kg";
+
         /// Construtor
         public DashboardViewModel()
         {
