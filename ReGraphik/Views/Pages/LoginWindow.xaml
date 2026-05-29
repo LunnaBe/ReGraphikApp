@@ -6,7 +6,8 @@
         Height="680" Width="900"
         MinHeight="680" MinWidth="900"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="CanResize">
+        ResizeMode="CanResize"
+        Icon="/Imgs/logoRegraphik.png">
 
     <Window.Resources>
         <vm:LoginViewModel x:Key="LoginVM"/>
