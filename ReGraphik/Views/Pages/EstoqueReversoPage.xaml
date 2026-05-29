@@ -102,7 +102,7 @@
                                     <ComboBoxItem Content="Todos"/>
                                     <ComboBoxItem Content="Últimos 30 dias"/>
                                 </ComboBox>
-                                <Button Grid.Column="1" Content="Filtrar" Width="80" Height="38" Background="#2563EB" Foreground="White" FontWeight="SemiBold" BorderThickness="0">
+                                <Button Grid.Column="1" Content="Filtrar" Width="80" Height="38" Background="#1649a2" Foreground="White" FontWeight="SemiBold" BorderThickness="0">
                                     <Button.Resources>
                                         <Style TargetType="Border">
                                             <Setter Property="CornerRadius" Value="6"/>
@@ -130,14 +130,14 @@
                 <Grid Grid.Row="0" Margin="0,0,0,16">
                     <TextBlock Text="Resíduos em Estoque" FontSize="16" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="Exportar" Width="90" Height="36" Background="White" BorderBrush="#2563EB" BorderThickness="1" Foreground="#2563EB" FontWeight="Medium" Margin="0,0,8,0">
+                        <Button Content="Exportar" Width="90" Height="36" Background="White" BorderBrush="#1649a2" BorderThickness="1" Foreground="#1649a2" FontWeight="Medium" Margin="0,0,8,0">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="6"/>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Content="Adicionar Resíduo" Width="140" Height="36" Background="#2563EB" BorderThickness="0" Foreground="White" FontWeight="Medium">
+                        <Button Content="Adicionar Resíduo" Width="140" Height="36" Background="#1649a2" BorderThickness="0" Foreground="White" FontWeight="Medium">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="6"/>

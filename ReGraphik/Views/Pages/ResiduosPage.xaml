@@ -67,7 +67,7 @@
 
                         <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,16">
                             <TextBlock Text="Tipo de Material" Style="{StaticResource FieldLabelStyle}"/>
-                            <ComboBox x:Name="CboTipoMaterial" Style="{StaticResource InputControlStyle}" SelectedIndex="0">
+                            <ComboBox x:Name="CboTipoMaterial" Style="{StaticResource InputControlStyle}" SelectedIndex="0" SelectedValuePath="Content" SelectedValue="{Binding TipoMaterial, Mode=TwoWay}">
                                 <ComboBoxItem Content="Selecione o tipo de material" Foreground="#94A3B8" IsEnabled="False"/>
 
                                 <ComboBoxItem Content="Papel Offset"/>
@@ -84,14 +84,13 @@
 
                         <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,16">
                             <TextBlock Text="Especificação" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="TxtEspecificacao" Style="{StaticResource InputControlStyle}" />
+                            <TextBox Text="{Binding Especificacao}" Style="{StaticResource InputControlStyle}" />
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,16">
                             <TextBlock Text="Origem" Style="{StaticResource FieldLabelStyle}"/>
-                            <ComboBox x:Name="CboOrigem" Style="{StaticResource InputControlStyle}" SelectedIndex="0">
+                            <ComboBox x:Name="CboOrigem" Style="{StaticResource InputControlStyle}" SelectedIndex="0" SelectedValuePath="Content" SelectedValue="{Binding Origem, Mode=TwoWay}">
                                 <ComboBoxItem Content="Selecione a origem" Foreground="#94A3B8" IsEnabled="False"/>
-
                                 <ComboBoxItem Content="Restos de Corte"/>
                                 <ComboBoxItem Content="Sobra de Impressão"/>
                             </ComboBox>
@@ -99,7 +98,7 @@
 
                         <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,16">
                             <TextBlock Text="Projeto/Cliente de Origem" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="TxtProjetoOrigem" Style="{StaticResource InputControlStyle}"/>
+                            <TextBox Text="{Binding ProjetoOrigem}" Style="{StaticResource InputControlStyle}"/>
                         </StackPanel>
 
                         <Grid Grid.Row="2" Grid.Column="0" Margin="0,0,0,16">
@@ -116,7 +115,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtQuantidade" Style="{StaticResource InputControlStyle}"/>
+                                    <TextBox Text="{Binding Quantidade}" Style="{StaticResource InputControlStyle}"/>
                                     <ComboBox Grid.Column="1" Width="60" Style="{StaticResource InputControlStyle}" SelectedIndex="0" BorderThickness="0,1,1,1">
                                         <ComboBoxItem Content="kg"/>
                                         <ComboBoxItem Content="un"/>
@@ -126,13 +125,13 @@
 
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Data" Style="{StaticResource FieldLabelStyle}"/>
-                                <DatePicker x:Name="DpData" Height="38" Padding="5"  VerticalContentAlignment="Center"/>
+                                <DatePicker SelectedDate="{Binding Data}" Height="38" Padding="5"  VerticalContentAlignment="Center"/>
                             </StackPanel>
                         </Grid>
 
                         <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,0,0,16">
                             <TextBlock Text="Condição" Style="{StaticResource FieldLabelStyle}"/>
-                            <ComboBox x:Name="CboCondicao" Style="{StaticResource InputControlStyle}" SelectedIndex="0" SelectionChanged="CboCondicao_SelectionChanged">
+                            <ComboBox x:Name="CboCondicao" Style="{StaticResource InputControlStyle}" SelectedIndex="0" SelectedValuePath="Content" SelectedValue="{Binding Condicao, Mode=TwoWay}">
                                 <ComboBoxItem Content="Selecione o tipo de condição" Foreground="#94A3B8" IsEnabled="False"/>
                                 <ComboBoxItem Content="Ótima"/>
                                 <ComboBoxItem Content="Regular / Usado"/>
@@ -147,7 +146,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="TxtDimensaoX" Style="{StaticResource InputControlStyle}" Text="Comprimento" Foreground="#94A3B8" TextChanged="TxtDimensaoX_TextChanged"/>
+                            <TextBox Text="{Binding Comprimento}" Style="{StaticResource InputControlStyle}" ToolTip="Comprimento do material" Foreground="#94A3B8"/>
                             <Border Grid.Column="1" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="0,1,1,1" Width="40" Height="38">
                                 <TextBlock Text="cm" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#64748B"/>
                             </Border>
@@ -158,7 +157,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="TxtDimensaoY" Style="{StaticResource InputControlStyle}" Text="Largura" Foreground="#94A3B8"/>
+                            <TextBox Text="{Binding Largura}" Style="{StaticResource InputControlStyle}" ToolTip="Largura do material" Foreground="#94A3B8"/>
                             <Border Grid.Column="1" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="0,1,1,1" Width="40" Height="38">
                                 <TextBlock Text="cm" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#64748B"/>
                             </Border>
@@ -166,9 +165,9 @@
 
                         <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,16">
                             <TextBlock Text="Observações" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="TxtObservacoes" Style="{StaticResource InputControlStyle}" Height="80" 
+                            <TextBox Text="{Binding Observacoes}" Style="{StaticResource InputControlStyle}" Height="80" 
                                      AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Padding="8"
-                                     Text="Observações adicionais sobre o material" Foreground="#94A3B8"/>
+                                     ToolTip="Observações adicionais sobre o material" Foreground="#94A3B8"/>
                         </StackPanel>
                     </Grid>
 
@@ -185,15 +184,15 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="BtnEscolherArquivo" Content="Escolher Arquivo" Click="BtnEscolherArquivo_Click"
+                                <Button Command="{Binding SelecionarArquivoCommand}" Content="Escolher Arquivo"
                                         Padding="12,0" Height="38" Background="#F1F5F9" BorderBrush="#CBD5E1" Foreground="#1E293B"/>
-                                <TextBox Grid.Column="1" x:Name="TxtNomeArquivo" Style="{StaticResource InputControlStyle}" 
-                                         IsReadOnly="True" Text="Video com Legenda.mp4" Margin="0,0,0,0" Background="White"/>
+                                <TextBox Grid.Column="1" Text="{Binding NomeArquivo}" Style="{StaticResource InputControlStyle}" 
+                                         IsReadOnly="True" Margin="0,0,0,0" Background="White"/>
                             </Grid>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button x:Name="BtnLimpar" Content="Limpar" Click="BtnLimpar_Click"
+                            <Button Command="{Binding LimparCommand}" Content="Limpar"
                                     Width="100" Height="40" Background="#F1F5F9" BorderBrush="#CBD5E1" 
                                     Foreground="#1E293B" FontWeight="SemiBold" Margin="0,0,12,0">
                                 <Button.Resources>
@@ -203,8 +202,8 @@
                                 </Button.Resources>
                             </Button>
 
-                            <Button x:Name="BtnSalvarResiduo" Content="Salvar Resíduo" Click="BtnSalvarResiduo_Click"
-                                    Width="140" Height="40" Background="#2563EB" BorderThickness="0" 
+                            <Button Command="{Binding SalvarResiduoCommand}" Content="Salvar Resíduo"
+                                    Width="140" Height="40" Background="#1649a2" BorderThickness="0" 
                                     Foreground="White" FontWeight="SemiBold">
                                 <Button.Resources>
                                     <Style TargetType="Border">
