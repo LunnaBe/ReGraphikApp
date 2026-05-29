@@ -6,8 +6,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ReGraphik.Models; 
-using ApiRestReGraphik.Models;
-using ReGraphik.Models;
 using LiveCharts;
 using LiveCharts.Wpf;
 

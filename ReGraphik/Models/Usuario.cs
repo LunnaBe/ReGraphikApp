@@ -22,6 +22,9 @@ namespace ReGraphik.Models
         [JsonPropertyName("senha")]
         public string Senha { get; set; }
 
+        [JsonPropertyName("perfil")]
+        public string Perfil { get; set; }
+
         [JsonPropertyName("data_cadastro")]
         public DateTime DataCadastro { get; set; }
     }
