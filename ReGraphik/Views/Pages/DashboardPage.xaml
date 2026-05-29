@@ -198,7 +198,7 @@
                                Margin="0,0,0,12" 
                                TextAlignment="Left"/>
 
-                    <Button Content="Verificar" Width="140" Height="36" Background="#3274ba" BorderThickness="0" 
+                    <Button Content="Verificar" Command="{Binding AtualizarDadosCommand}" Width="140" Height="36" Background="#3274ba" BorderThickness="0" 
                             Foreground="White" FontWeight="Medium" HorizontalAlignment="Right">
                         <Button.Resources>
                             <Style TargetType="Border">
